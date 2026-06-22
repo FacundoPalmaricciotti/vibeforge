@@ -68,10 +68,19 @@ const auth = {
 
         try {
             const respuesta = await api.post('/usuarios/registro', { nombre, correo, contraseña: contrasena });
+            
             if (respuesta && respuesta.idUsuario) {
                 return { exito: true };
             }
+
+            if (respuesta && respuesta.mensaje) {
+                if (respuesta.mensaje.includes("ya está registrado")) {
+                    return { exito: false, mensaje: "Ese correo ya existe. Por favor, iniciá sesión." };
+                }
+                return { exito: false, mensaje: respuesta.mensaje };
+            }
             return { exito: false, mensaje: "Error al crear la cuenta" };
+
         } catch (error) {
             try {
                 const backendError = JSON.parse(error.message);
