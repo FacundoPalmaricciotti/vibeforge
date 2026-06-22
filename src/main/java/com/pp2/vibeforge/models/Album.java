@@ -15,7 +15,7 @@ public class Album {
     @Column(name = "idArtista")
     private Integer idArtista;
 
-    @Column(name = "titulo")
+    @Column(name = "titulo", length = 1000)
     private String titulo;
 
     @Column(name = "fechaLanzamiento")
@@ -27,7 +27,7 @@ public class Album {
     @Column(name = "portada")
     private String portada;
 
-    @Column(name = "imagen_url")
+    @Column(name = "imagen_url", length = 2000)
     private String imagenUrl;
 
     @Column(name = "activo")

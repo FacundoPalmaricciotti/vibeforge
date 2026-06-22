@@ -11,7 +11,7 @@ public class Cancion {
     @Column(name = "idCancion")
     private Integer idCancion;
 
-    @Column(name = "titulo")
+    @Column(name = "titulo", length = 1000)
     private String titulo;
 
     @Column(name = "idArtista")
