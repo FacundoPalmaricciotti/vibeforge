@@ -583,7 +583,7 @@ window.cargarPensamientos = async function(idDueñoMuro, infoDueñoMuro, loSigue
             }
 
             let cajaComentariosHTML = puedeComentar ? `
-                <div style="position: sticky; bottom: 0; background: #181818; padding: 10px 0; margin-top: 15px; border-top: 1px solid #282828; z-index: 10;">
+                <div class="composer-container sticky-bottom" id="composer-container-${p.idPensamiento}" style="position: sticky; bottom: 0; background: #181818; padding: 10px 0; margin-top: 15px; border-top: 1px solid #282828; z-index: 100; display: block;">
                     <div id="reply-banner-${p.idPensamiento}" style="display: none; justify-content: space-between; align-items: center; padding: 0 5px 8px 5px; margin-bottom: 8px; border-bottom: 1px solid #222;">
                         <span style="font-size: 12px; color: var(--text-muted);">Respondiendo a <b id="reply-name-${p.idPensamiento}" style="color: white;"></b></span>
                         <button onclick="cancelarRespuesta(${p.idPensamiento})" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 0 5px;">✕</button>
@@ -602,7 +602,7 @@ window.cargarPensamientos = async function(idDueñoMuro, infoDueñoMuro, loSigue
                     </div>
                 </div>
             ` : `
-                <div style="position: sticky; bottom: 0; background: #181818; padding: 15px 0; margin-top: 15px; border-top: 1px solid #282828; z-index: 10; display:flex; align-items:center; justify-content:center; gap:8px; color: var(--text-muted); font-size: 13px; font-weight: 500;">
+                <div style="position: sticky; bottom: 0; background: #181818; padding: 15px 0; margin-top: 15px; border-top: 1px solid #282828; z-index: 100; display:flex; align-items:center; justify-content:center; gap:8px; color: var(--text-muted); font-size: 13px; font-weight: 500;">
                     ${SVG_LOCK_PROFILE} Solo los seguidores pueden comentar acá.
                 </div>
             `;
