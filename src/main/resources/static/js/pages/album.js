@@ -383,12 +383,12 @@ window.dibujarPlaylistsEnModalUniversal = function() {
         const borde = isFullySaved ? '1px solid #1ed760' : '1px solid #444';
         
         const textoAccion = isFullySaved 
-            ? `<span style="display:flex; align-items:center; gap:5px;">${SVG_CHECK} Agregado</span>` 
-            : `<span style="display:flex; align-items:center; gap:5px; color: var(--text-muted);">${SVG_PLUS} Agregar</span>`;
+            ? `<span class="accion-texto" style="display:flex; align-items:center; gap:5px;">${SVG_CHECK} Agregado</span>` 
+            : `<span class="accion-texto" style="display:flex; align-items:center; gap:5px; color: var(--text-muted);">${SVG_PLUS} Agregar</span>`;
 
         playlistHTML += `
-            <div id="pl-item-modal-${pl.idPlaylist}" onclick="toggleGuardadoUniversal(${pl.idPlaylist})" style="padding: 12px 15px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; border: ${borde}; background: ${bgColor}; color: ${textColor}; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onmouseover="if(!${isFullySaved}) this.style.borderColor='white'" onmouseout="this.style.borderColor='${isFullySaved ? '#1ed760' : '#444'}'">
-                <span style="font-weight: bold;">${pl.titulo || pl.nombre || 'Sin Título'}</span>
+            <div id="pl-item-${pl.idPlaylist}" onclick="toggleGuardadoUniversal(${pl.idPlaylist})" style="padding: 12px 15px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; border: ${borde}; background: ${bgColor}; color: ${textColor}; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onmouseover="if(this.style.borderColor !== 'rgb(30, 215, 96)') this.style.borderColor='white'" onmouseout="if(this.style.borderColor !== 'rgb(30, 215, 96)') this.style.borderColor='#444'">
+                <span class="pl-nombre" style="font-weight: bold;">${pl.titulo || pl.nombre || 'Sin Título'}</span>
                 ${textoAccion}
             </div>
         `;
@@ -397,21 +397,23 @@ window.dibujarPlaylistsEnModalUniversal = function() {
 };
 
 window.toggleGuardadoUniversal = async function(idPlaylist) {
-    const playlistElement = document.getElementById('pl-item-modal-' + idPlaylist);
+    const playlistElement = document.getElementById(`pl-item-${idPlaylist}`);
     if (!playlistElement) return;
 
-    const esParaAgregar = playlistElement.innerHTML.includes(SVG_PLUS);
-    
+    const esParaAgregar = playlistElement.style.color !== 'rgb(30, 215, 96)' && playlistElement.style.color !== '#1ed760';
+
     if (esParaAgregar) {
         playlistElement.style.background = 'rgba(30, 215, 96, 0.1)';
         playlistElement.style.borderColor = '#1ed760';
         playlistElement.style.color = '#1ed760';
-        playlistElement.innerHTML = `<span style="font-weight: bold;">${playlistElement.querySelector('span').innerText}</span><span style="display:flex; align-items:center; gap:5px;">${SVG_CHECK} Agregado</span>`;
+        playlistElement.querySelector('.accion-texto').innerHTML = `${SVG_CHECK} Agregado`;
+        playlistElement.querySelector('.accion-texto').style.color = 'inherit';
     } else {
         playlistElement.style.background = '#282828';
         playlistElement.style.borderColor = '#444';
         playlistElement.style.color = 'white';
-        playlistElement.innerHTML = `<span style="font-weight: bold;">${playlistElement.querySelector('span').innerText}</span><span style="display:flex; align-items:center; gap:5px; color: var(--text-muted);">${SVG_PLUS} Agregar</span>`;
+        playlistElement.querySelector('.accion-texto').innerHTML = `${SVG_PLUS} Agregar`;
+        playlistElement.querySelector('.accion-texto').style.color = 'var(--text-muted)';
     }
 
     playlistElement.style.pointerEvents = 'none';
