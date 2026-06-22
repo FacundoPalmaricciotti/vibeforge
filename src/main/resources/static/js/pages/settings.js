@@ -35,14 +35,13 @@ async function renderSettings() {
     .sg-root { 
         display: flex; 
         gap: 0; 
-        width: 900px; 
-        max-width: 95%; 
-        /* height: 680px; ← eliminado */
-        min-height: 100vh; /* nuevo */
+        width: 900px;
+        max-width: 95%;
+        min-height: auto;
+        overflow: visible;
         background: #121212; 
         border: 1px solid #282828; 
-        border-radius: 12px; 
-        overflow: hidden; 
+        border-radius: 12px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
         margin: 40px auto; 
     }

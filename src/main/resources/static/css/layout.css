@@ -1,8 +1,7 @@
 .app-layout {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
-  overflow: hidden;
 }
 
 .sidebar {
@@ -50,7 +49,8 @@
   display: flex;
   flex-direction: column;
   background: linear-gradient(to bottom, #1e1e2d, var(--bg-base) 40%);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .topbar {
