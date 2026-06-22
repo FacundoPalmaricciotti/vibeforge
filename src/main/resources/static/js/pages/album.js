@@ -240,7 +240,29 @@ async function renderAlbum() {
         document.getElementById('tracks-container').innerHTML = tracksHTML;
 
     } catch (error) {
-        document.getElementById('app').innerHTML = ui.renderLayout('<div style="padding: 50px; text-align: center; color: var(--error);">Error al cargar el álbum.</div>');
+        console.error("Detalle del choque:", error);
+        
+        let mensajeReal = error.message;
+        try {
+            const errorParseado = JSON.parse(error.message);
+            if (errorParseado.mensaje) mensajeReal = errorParseado.mensaje;
+        } catch(e) {}
+
+        document.getElementById('app').innerHTML = ui.renderLayout(`
+            <div style="padding: 60px 20px; text-align: center; max-width: 500px; margin: 0 auto;">
+                ${SVG_BLOCK}
+                <h2 style="color: var(--error); margin-bottom: 15px;">Colapso en la conexión</h2>
+                <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 20px;">
+                    El servidor en Ohio está tardando demasiado en responder o devolvió un formato inválido.
+                </p>
+                <div style="background: #222; border: 1px solid #e91e63; color: white; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px; text-align: left; word-wrap: break-word;">
+                    > ${mensajeReal || "Error desconocido"}
+                </div>
+                <button onclick="window.location.reload()" style="margin-top: 30px; padding: 12px 30px; background: var(--primary); color: black; font-weight: bold; border: none; border-radius: 500px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    Reintentar Conexión
+                </button>
+            </div>
+        `);
     }
 }
 
