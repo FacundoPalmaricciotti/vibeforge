@@ -89,6 +89,7 @@ async function renderAlbum() {
         window.mapaGuardadas = {};
         playlistsUsuario.forEach(pl => {
             if(pl.canciones) {
+                pl.canciones = pl.canciones.filter(c => c !== null && c !== undefined);                
                 pl.canciones.forEach(c => {
                     if(!window.mapaGuardadas[c.idCancion]) window.mapaGuardadas[c.idCancion] = [];
                     window.mapaGuardadas[c.idCancion].push(pl.idPlaylist);
