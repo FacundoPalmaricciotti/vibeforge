@@ -629,7 +629,7 @@ window.cargarPensamientos = async function(idDueñoMuro, infoDueñoMuro, loSigue
                         </button>
                     </div>
 
-                    <div id="box-comentarios-${p.idPensamiento}" style="display: none; border-top: 1px solid #222; padding-top: 15px; margin-top: 10px; max-height: 60vh; overflow-y: auto; display: flex; flex-direction: column; position: relative;">
+                    <div id="box-comentarios-${p.idPensamiento}" style="display: none; border-top: 1px solid #222; padding-top: 15px; margin-top: 10px; max-height: 60vh; overflow-y: auto; flex-direction: column; position: relative;">                        <div class="mood-picker" id="moodPicker-${p.idPensamiento}" style="margin-bottom: 12px; display: flex; gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 5px; scrollbar-width: none;">
                         <div class="mood-picker" id="moodPicker-${p.idPensamiento}" style="margin-bottom: 12px; display: flex; gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 5px; scrollbar-width: none;">
                             <style>#moodPicker-${p.idPensamiento}::-webkit-scrollbar { display: none; }</style>
                             <button class="mood-pill pill-banger selected" onclick="selectMoodLocal(${p.idPensamiento}, 'banger', this)" style="white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 4px 10px; display: inline-flex; align-items: center; justify-content: center;">${SVG_BANGER} OnFire</button>
@@ -695,12 +695,12 @@ window.toggleContenedorComentarios = function(idPensamiento) {
     const fab = document.querySelector('.fab-social');
     
     if (contenedor.style.display === 'none') {
-        contenedor.style.display = 'block';
+        contenedor.style.display = 'flex'; 
         if (fab) fab.style.display = 'none';
         renderizarComentarios(idPensamiento);
     } else {
         contenedor.style.display = 'none';
-        const algunAbierto = Array.from(document.querySelectorAll('[id^="box-comentarios-"]')).some(el => el.style.display === 'block');
+        const algunAbierto = Array.from(document.querySelectorAll('[id^="box-comentarios-"]')).some(el => el.style.display === 'flex');
         if (fab && !algunAbierto) fab.style.display = 'flex';
     }
 };
