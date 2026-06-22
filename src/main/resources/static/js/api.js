@@ -1,6 +1,6 @@
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8080/api'
-    : 'https://vibeforge-backend.onrender.com';
+    : 'https://vibeforge-backend.onrender.com/api';
 
 const api = {
     async get(endpoint) {
