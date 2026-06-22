@@ -258,7 +258,31 @@ window.cerrarModal = function() {
     document.getElementById('modal-playlist').style.display = 'none';
     modalTipoActual = null;
     modalIdActual = null;
-    renderAlbum();
+    actualizarIconosAlbumSilencioso();
+};
+
+window.actualizarIconosAlbumSilencioso = function() {
+    if (!window.cancionesAlbumActual) return;
+
+    let albumGuardadoEnAlgunaPL = false;
+
+    window.cancionesAlbumActual.forEach(c => {
+        const btnCancion = document.getElementById('btn-add-' + c.idCancion);
+        const estaGuardada = window.mapaGuardadas[c.idCancion] && window.mapaGuardadas[c.idCancion].length > 0;
+        
+        if (estaGuardada) albumGuardadoEnAlgunaPL = true;
+
+        if (btnCancion) {
+            btnCancion.innerHTML = estaGuardada ? SVG_CHECK : SVG_PLUS;
+            btnCancion.style.color = estaGuardada ? '#1ed760' : 'var(--text-muted)';
+        }
+    });
+    
+    const btnAddAlbum = document.getElementById('btn-add-album');
+    if (btnAddAlbum) {
+        btnAddAlbum.innerHTML = albumGuardadoEnAlgunaPL ? SVG_CHECK_CIRCLE : SVG_PLUS_CIRCLE;
+        btnAddAlbum.style.color = albumGuardadoEnAlgunaPL ? '#1ed760' : '#b3b3b3';
+    }
 };
 
 window.dibujarPlaylistsEnModalUniversal = function() {
