@@ -784,19 +784,23 @@ window.cancelarRespuesta = function(idPensamiento, forzarCierreTeclado = false) 
     const hiddenPadre = document.getElementById(`replyPadre-${idPensamiento}`);
     const hiddenMention = document.getElementById(`replyMention-${idPensamiento}`);
     const replyBanner = document.getElementById(`reply-banner-${idPensamiento}`);
-    const input = document.getElementById(`input-comm-new-${idPensamiento}`);   
-    
-    if(hiddenPadre) hiddenPadre.value = '';
-    if(hiddenMention) hiddenMention.value = '';
-    if(replyBanner) replyBanner.style.display = 'none';
-    
-    if(input) {
+    const input = document.getElementById(`input-comm-new-${idPensamiento}`);
+
+    if (hiddenPadre) hiddenPadre.value = '';
+    if (hiddenMention) hiddenMention.value = '';
+    if (replyBanner) replyBanner.style.display = 'none';
+
+    if (input) {
         input.placeholder = "Suma tu barra...";
-        input.value = ''; 
+        input.value = '';
+
         if (forzarCierreTeclado) {
             input.blur();
-        } else {
-            input.focus();
+            setTimeout(() => {
+                input.blur();
+                document.body.style.height = 'auto';
+                setTimeout(() => document.body.style.height = '', 50);
+            }, 80);
         }
     }
 };
@@ -883,34 +887,52 @@ window.toggleReplyVisible = function(btn) {
 
 window.enviarComentarioMaster = async function(idPensamiento, idDueñoDestino) {
     const inputElement = document.getElementById(`input-comm-new-${idPensamiento}`);
-    const hiddenPadre = document.getElementById(`replyPadre-${idPensamiento}`);
-    const hiddenMention = document.getElementById(`replyMention-${idPensamiento}`);
-    
     if (!inputElement) return;
-    
+
     const contenido = inputElement.value.trim();
     if (!contenido) return;
+
+    const hiddenPadre = document.getElementById(`replyPadre-${idPensamiento}`);
+    const hiddenMention = document.getElementById(`replyMention-${idPensamiento}`);
 
     const idPadre = hiddenPadre && hiddenPadre.value ? parseInt(hiddenPadre.value) : null;
     const idMencionado = hiddenMention && hiddenMention.value ? parseInt(hiddenMention.value) : null;
     const isReply = idPadre !== null;
-    
+
     const selectMood = document.getElementById(`currentMood-${idPensamiento}`);
     const mood = isReply ? 'CHILL' : (selectMood ? selectMood.value : 'CHILL');
+
 
     inputElement.blur();
 
     try {
-        const respuestaJava = await api.post('/comentarios', { idPensamiento, idUsuario: auth.idActual, idPadre, contenido, mood });
-        
+        const respuestaJava = await api.post('/comentarios', { 
+            idPensamiento, 
+            idUsuario: auth.idActual, 
+            idPadre, 
+            contenido, 
+            mood 
+        });
+
         inputElement.value = '';
         window.cancelarRespuesta(idPensamiento, true);
-        
+
         await renderizarComentarios(idPensamiento, true);
-        
-        if(!isReply) spawnParticlesLocal(moodParticles[mood.toLowerCase()], document.getElementById(`box-comentarios-${idPensamiento}`));
+
+        setTimeout(() => {
+            window.scrollBy(0, 1);
+            window.scrollBy(0, -1);
+
+            if (typeof ui !== 'undefined' && ui.refreshLayout) {
+                ui.refreshLayout();
+            }
+
+            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+        }, 150);
+
+        if (!isReply) spawnParticlesLocal(moodParticles[mood.toLowerCase()], document.getElementById(`box-comentarios-${idPensamiento}`));
         procesarPalabrasClaveReactivas(contenido);
-        
+
         const spanPases = document.querySelector(`#pensamiento-${idPensamiento} .contador-pases`);
         if (spanPases) spanPases.innerText = parseInt(spanPases.innerText) + 1;
 
@@ -946,6 +968,7 @@ window.enviarComentarioMaster = async function(idPensamiento, idDueñoDestino) {
         }
 
     } catch (e) {
+        console.error("Error enviando comentario:", e);
         ui.alerta("Error", "No se pudo enviar el comentario", "error");
     }
 };
