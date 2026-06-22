@@ -257,13 +257,12 @@ window.abrirModalPlaylistUniversal = function(tipo, id) {
 window.cerrarModal = function() {
     document.getElementById('modal-playlist').style.display = 'none';
     modalTipoActual = null;
-    modalIdActual = null;
+    modalIdActual = null;    
     actualizarIconosAlbumSilencioso();
 };
 
 window.actualizarIconosAlbumSilencioso = function() {
     if (!window.cancionesAlbumActual) return;
-
     let albumGuardadoEnAlgunaPL = false;
 
     window.cancionesAlbumActual.forEach(c => {
@@ -282,6 +281,65 @@ window.actualizarIconosAlbumSilencioso = function() {
     if (btnAddAlbum) {
         btnAddAlbum.innerHTML = albumGuardadoEnAlgunaPL ? SVG_CHECK_CIRCLE : SVG_PLUS_CIRCLE;
         btnAddAlbum.style.color = albumGuardadoEnAlgunaPL ? '#1ed760' : '#b3b3b3';
+    }
+};
+
+window.crearYAgregarAlbumPL = async function(idAlbum) {
+    const input = document.getElementById('nueva-pl-album-input');
+    const titulo = input.value.trim();
+    if (!titulo) return;
+
+    const btn = input.nextElementSibling;
+    const textoOriginal = btn.innerText;
+
+    btn.innerText = 'Creando...';
+    btn.style.pointerEvents = 'none';
+    btn.style.opacity = '0.5';
+
+    try {
+        const nuevaPl = await api.post('/playlists', { 
+            titulo: titulo, 
+            idUsuario: auth.idActual, 
+            descripcion: "Álbum completo importado" 
+        });
+
+        const respuesta = await api.post(`/playlists/${nuevaPl.idPlaylist}/album/${idAlbum}`);        
+        document.getElementById('modal-guardar-album').remove();
+        
+        if (typeof mostrarMensajeAjustes === 'function') {
+            mostrarMensajeAjustes(`¡Playlist creada con ${respuesta.agregadas} tracks!`, "success");
+        }
+        if (typeof confetti === 'function') {
+            confetti({ particleCount: 60, spread: 50, origin: { y: 0.8 }, colors: ['#1ed760'] });
+        }
+
+        actualizarIconosAlbumSilencioso();
+
+    } catch (e) {
+        alert("No se pudo crear la playlist express.");
+    } finally {
+        btn.innerText = textoOriginal;
+        btn.style.pointerEvents = 'auto';
+        btn.style.opacity = '1';
+    }
+};
+
+window.ejecutarGuardadoAlbum = async function(idAlbum, idPlaylist) {
+    try {
+        const respuesta = await api.post(`/playlists/${idPlaylist}/album/${idAlbum}`);
+        document.getElementById('modal-guardar-album').remove();
+        
+        if (respuesta.agregadas === 0) {
+            if (typeof mostrarMensajeAjustes === 'function') mostrarMensajeAjustes("Ese álbum ya estaba completo en la playlist", "error");
+        } else {
+            if (typeof mostrarMensajeAjustes === 'function') mostrarMensajeAjustes(`¡Se agregaron ${respuesta.agregadas} canciones nuevas!`, "success");
+            if (typeof confetti === 'function') confetti({ particleCount: 50, spread: 60, colors: ['#1ed760'] });
+        }
+                
+        actualizarIconosAlbumSilencioso();
+
+    } catch (e) {
+        alert("Error al guardar el álbum en la playlist.");
     }
 };
 
@@ -390,6 +448,7 @@ window.crearYAgregarPLUniversal = async function() {
         btn.style.opacity = '1';
     }
 };
+
 
 window.toggleFavoritoAlbum = async function(idAlbum) {
     const btn = document.getElementById('btn-fav-album');
