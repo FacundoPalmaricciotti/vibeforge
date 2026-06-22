@@ -359,6 +359,9 @@ window.ejecutarBusquedaGlobal = function(texto) {
         const albumesFiltrados = window.cacheBuscador.albumes.filter(a => a.titulo.toLowerCase().includes(textoBuscado)).slice(0, 3);
         const usuariosFiltrados = window.cacheBuscador.usuarios.filter(u => {
 
+            if (parseInt(u.idUsuario || u.id) === parseInt(auth.idActual)) {
+                return false;
+            }
             if (u.privBusqueda === false && auth.rolActual !== 'ADMIN' && parseInt(u.idUsuario) !== parseInt(auth.idActual)) {
                 return false;
             }
