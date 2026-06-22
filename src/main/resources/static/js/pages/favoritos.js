@@ -29,13 +29,13 @@ async function renderFavoritos() {
 
     document.getElementById('app').innerHTML = ui.renderLayout(`
         <style>
-            .fav-container { padding: 30px; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
+            .fav-container { padding: 30px; padding-bottom: 120px; max-width: 1200px; margin: 0 auto; box-sizing: border-box; }
             .fav-header { font-size: 2.5rem; color: white; font-weight: 800; margin-bottom: 30px; display: flex; align-items: center; }
             .fav-section-title { font-size: 1.5rem; color: #b3b3b3; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; }
             .fav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
             
             @media (max-width: 768px) {
-                .fav-container { padding: 15px; }
+                .fav-container { padding: 15px; padding-bottom: 60px; }
                 .fav-header { font-size: 1.8rem; margin-bottom: 20px; justify-content: center; }
                 .fav-header svg { width: 22px; height: 22px; margin-left: 6px; }
                 .fav-section-title { font-size: 1.1rem; text-align: center; }
