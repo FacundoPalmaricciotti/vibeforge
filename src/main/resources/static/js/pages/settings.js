@@ -95,21 +95,15 @@ async function renderSettings() {
     
     @media (max-width: 768px) {
         .sg-top-bar { padding: 15px 20px; }
-        .sg-root { flex-direction: column; margin: 0; width: 100%; border-radius: 0; min-height: 100vh; height: auto; border: none; }
+        .sg-root { flex-direction: column; margin: 0; width: 100%; border-radius: 0; min-height: auto !important; height: auto !important; border: none; overflow: visible !important; }
         .sg-nav { width: 100%; display: flex; overflow-x: auto; border-right: none; border-bottom: 1px solid #282828; padding: 10px; }
         .sg-nav-item { border-left: none; border-bottom: 3px solid transparent; white-space: nowrap; padding: 10px 15px;}
         .sg-nav-item.active { border-left-color: transparent; border-bottom-color: var(--primary); }
         .sg-nav-sep { display: none; }
-        .sg-body { padding: 25px 20px; }
-        .sg-root { 
-            min-height: 100vh; 
-            height: auto !important; 
-            margin: 0; 
-            border-radius: 0; 
-        }
-        .sg-body {
-            padding-bottom: 120px !important;
-            min-height: calc(100vh - 60px); /* espacio para topbar */
+        .sg-body { 
+            padding: 25px 20px 180px 20px !important;
+            min-height: auto !important;
+            overflow-y: visible !important;
         }
     }
     </style>

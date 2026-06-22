@@ -1,3 +1,4 @@
+
 window.userPlaylistsCache = [];
 window.mapaGuardadas = {};
 
@@ -126,11 +127,12 @@ async function renderAlbum() {
                 .alb-wrapper,
                 #album-content {
                     height: auto !important;
+                    min-height: auto !important;
                     overflow: visible !important;
                 }
 
                 #tracks-container {
-                    padding-bottom: 80px !important;
+                    padding-bottom: 160px !important;
                 }               
                 .alb-header { display: flex; gap: 30px; align-items: flex-end; margin-bottom: 30px; padding: 30px 15px; justify-content: flex-start !important; }
                 .alb-cover { width: 260px; height: 260px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); object-fit: cover; flex-shrink: 0; }
