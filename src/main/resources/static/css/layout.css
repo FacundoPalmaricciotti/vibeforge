@@ -395,21 +395,3 @@
         justify-content: flex-start !important;
     }
 }
-
-:root {
-    --vh: 1vh;
-}
-
-body, #app {
-    min-height: 100vh;
-    min-height: calc(var(--vh, 1vh) * 100);
-}
-
-.top-bar, .nav-fixed {   /* la clase de tu barra superior */
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    /* evita que se mueva con el teclado */
-    will-change: transform;
-}

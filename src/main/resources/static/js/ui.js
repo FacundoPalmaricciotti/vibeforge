@@ -1121,37 +1121,3 @@ window.finalizarOnboardingVisual = function() {
         setTimeout(() => modal.remove(), 350);
     }
 };
-
-
-// ====================== FIX MOVIL VIEWPORT ======================
-
-function setupMobileViewportFix() {
-    const updateVH = () => {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-
-    // Ejecutar inmediatamente
-    updateVH();
-
-    // Escuchar cambios de tamaño (teclado virtual, rotación, etc.)
-    window.addEventListener('resize', updateVH);
-    window.addEventListener('orientationchange', updateVH);
-
-    // Mejor soporte en iOS (visualViewport)
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', updateVH);
-    }
-
-    // Opcional: ejecutar también después de cargar cada página
-    if (typeof window.addEventListener === 'function') {
-        document.addEventListener('pageLoaded', updateVH); // si usás este evento en router
-    }
-}
-
-// Inicializar el fix cuando se cargue la app
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupMobileViewportFix);
-} else {
-    setupMobileViewportFix();
-}
