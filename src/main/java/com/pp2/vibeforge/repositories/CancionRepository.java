@@ -8,8 +8,8 @@ import java.util.List;
 @Repository
 public interface CancionRepository extends JpaRepository<Cancion, Integer> {
     List<Cancion> findByIdAlbum(Integer idAlbum);
-    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.data.jpa.repository.Modifying(clearAutomatically = true, flushAutomatically = true)
     @org.springframework.transaction.annotation.Transactional
     @org.springframework.data.jpa.repository.Query(value = "DELETE FROM playlist_cancion WHERE idcancion = :idCancion", nativeQuery = true)
-    void eliminarDeTodasLasPlaylists(@org.springframework.data.repository.query.Param("idCancion") Integer idCancion);
+    void eliminarDeTodasLasPlaylists(@org.springframework.data.repository.query.Param("idCancion") Integer idCancion);   
 }
