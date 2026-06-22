@@ -604,10 +604,18 @@ window.abrirModalGuardarAlbum = async function(idAlbum) {
         document.getElementById('lista-mis-playlists-modal').innerHTML = '<span style="color:#e91e63;">Error al escanear tus playlists.</span>';
     }
 };
+
 window.crearYAgregarAlbumPL = async function(idAlbum) {
     const input = document.getElementById('nueva-pl-album-input');
     const titulo = input.value.trim();
     if (!titulo) return;
+
+    const btn = input.nextElementSibling;
+    const textoOriginal = btn.innerText;
+    
+    btn.innerText = 'Creando...';
+    btn.style.pointerEvents = 'none';
+    btn.style.opacity = '0.5';
 
     try {
         const nuevaPl = await api.post('/playlists', { 
@@ -627,10 +635,17 @@ window.crearYAgregarAlbumPL = async function(idAlbum) {
             confetti({ particleCount: 60, spread: 50, origin: { y: 0.8 }, colors: ['#1ed760'] });
         }
 
-        if (typeof renderAlbum === 'function') renderAlbum();
+        if (typeof actualizarIconosAlbumSilencioso === 'function') {
+            actualizarIconosAlbumSilencioso();
+        } else if (typeof renderAlbum === 'function') {
+            renderAlbum();
+        }
 
     } catch (e) {
         alert("No se pudo crear la playlist express.");
+        btn.innerText = textoOriginal;
+        btn.style.pointerEvents = 'auto';
+        btn.style.opacity = '1';
     }
 };
 

@@ -277,7 +277,7 @@ window.actualizarIconosAlbumSilencioso = function() {
             btnCancion.style.color = estaGuardada ? '#1ed760' : 'var(--text-muted)';
         }
     });
-    
+
     const btnAddAlbum = document.getElementById('btn-add-album');
     if (btnAddAlbum) {
         btnAddAlbum.innerHTML = albumGuardadoEnAlgunaPL ? SVG_CHECK_CIRCLE : SVG_PLUS_CIRCLE;
@@ -353,8 +353,17 @@ window.toggleGuardadoUniversal = async function(idPlaylist) {
 };
 
 window.crearYAgregarPLUniversal = async function() {
-    const titulo = document.getElementById('nueva-pl-input').value;
-    if(!titulo || titulo.trim() === '') return;
+    const input = document.getElementById('nueva-pl-input');
+    const titulo = input.value.trim();
+    if(!titulo) return;
+
+    const btn = input.nextElementSibling;
+    const textoOriginal = btn.innerText;
+    
+    btn.innerText = 'Creando...';
+    btn.style.pointerEvents = 'none';
+    btn.style.opacity = '0.5';
+
     try {
         const nuevaPl = await api.post('/playlists', { titulo: titulo, idUsuario: auth.idActual, descripcion: "Creada desde el catálogo" });
         window.userPlaylistsCache.push(nuevaPl);
@@ -371,9 +380,15 @@ window.crearYAgregarPLUniversal = async function() {
             }
         }
         
-        document.getElementById('nueva-pl-input').value = '';
+        input.value = '';
         dibujarPlaylistsEnModalUniversal();
-    } catch(e) {}
+    } catch(e) {
+        alert("Error al crear la playlist.");
+    } finally {
+        btn.innerText = textoOriginal;
+        btn.style.pointerEvents = 'auto';
+        btn.style.opacity = '1';
+    }
 };
 
 window.toggleFavoritoAlbum = async function(idAlbum) {
