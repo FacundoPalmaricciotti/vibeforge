@@ -387,7 +387,7 @@ window.dibujarPlaylistsEnModalUniversal = function() {
             : `<span style="display:flex; align-items:center; gap:5px; color: var(--text-muted);">${SVG_PLUS} Agregar</span>`;
 
         playlistHTML += `
-            <div onclick="toggleGuardadoUniversal(${pl.idPlaylist})" style="padding: 12px 15px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; border: ${borde}; background: ${bgColor}; color: ${textColor}; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onmouseover="if(!${isFullySaved}) this.style.borderColor='white'" onmouseout="this.style.borderColor='${isFullySaved ? '#1ed760' : '#444'}'">
+            <div id="pl-item-modal-${pl.idPlaylist}" onclick="toggleGuardadoUniversal(${pl.idPlaylist})" style="padding: 12px 15px; margin-bottom: 10px; border-radius: 6px; cursor: pointer; border: ${borde}; background: ${bgColor}; color: ${textColor}; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;" onmouseover="if(!${isFullySaved}) this.style.borderColor='white'" onmouseout="this.style.borderColor='${isFullySaved ? '#1ed760' : '#444'}'">
                 <span style="font-weight: bold;">${pl.titulo || pl.nombre || 'Sin Título'}</span>
                 ${textoAccion}
             </div>
@@ -397,8 +397,9 @@ window.dibujarPlaylistsEnModalUniversal = function() {
 };
 
 window.toggleGuardadoUniversal = async function(idPlaylist) {
-    
-    const playlistElement = event.currentTarget;
+    const playlistElement = document.getElementById('pl-item-modal-' + idPlaylist);
+    if (!playlistElement) return;
+
     const esParaAgregar = playlistElement.innerHTML.includes(SVG_PLUS);
     
     if (esParaAgregar) {
@@ -452,7 +453,7 @@ window.toggleGuardadoUniversal = async function(idPlaylist) {
         dibujarPlaylistsEnModalUniversal();
         alert("Ocurrió un error al guardar. Revisa tu conexión.");
     } finally {
-        playlistElement.style.pointerEvents = 'auto';
+        if (playlistElement) playlistElement.style.pointerEvents = 'auto';
     }
 };
 
