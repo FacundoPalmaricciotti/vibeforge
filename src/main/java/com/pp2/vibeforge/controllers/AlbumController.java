@@ -187,6 +187,7 @@ public class AlbumController {
             if (!canciones.isEmpty()) {
                 for (com.pp2.vibeforge.models.Cancion c : canciones) {
                     historialUsuarioRepository.deleteByTipoItemAndIdReferencia("CANCION", c.getIdCancion());
+                    cancionRepository.eliminarDeTodasLasPlaylists(c.getIdCancion());
                 }
                 cancionRepository.deleteAll(canciones);
             }
