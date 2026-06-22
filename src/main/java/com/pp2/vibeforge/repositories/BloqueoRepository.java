@@ -10,4 +10,7 @@ public interface BloqueoRepository extends JpaRepository<Bloqueo, Integer> {
     
     @Transactional
     void deleteByIdUsuarioBloqueadorAndIdUsuarioBloqueado(Integer idBloqueador, Integer idBloqueado);
+
+    void deleteAllByIdUsuarioBloqueador(Integer idUsuarioBloqueador);
+    void deleteAllByIdUsuarioBloqueado(Integer idUsuarioBloqueado);
 }

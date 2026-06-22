@@ -24,4 +24,7 @@ public interface SeguidorRepository extends JpaRepository<Seguidor, Integer> {
 
     @Query("SELECT u FROM Usuario u JOIN Seguidor s ON u.idUsuario = s.idSeguido WHERE s.idSeguidor = :idUsuario")
     List<Usuario> findSiguiendoByUsuario(@Param("idUsuario") Integer idUsuario);
+
+    void deleteAllByIdSeguidor(Integer idSeguidor);
+    void deleteAllByIdSeguido(Integer idSeguido);
 }

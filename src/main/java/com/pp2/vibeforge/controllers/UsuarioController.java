@@ -1,5 +1,8 @@
 package com.pp2.vibeforge.controllers;
 
+import com.pp2.vibeforge.repositories.SeguidorRepository;
+import com.pp2.vibeforge.repositories.BloqueoRepository;
+import org.springframework.transaction.annotation.Transactional;
 import com.pp2.vibeforge.models.Usuario;
 import com.pp2.vibeforge.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,12 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private SeguidorRepository seguidorRepository;
+
+    @Autowired
+    private BloqueoRepository bloqueoRepository;
 
     @PostConstruct
     public void parchearUsuariosViejos() {
@@ -208,7 +217,8 @@ public class UsuarioController {
         return org.springframework.http.ResponseEntity.ok(usuario);
     }
 
-    @PostMapping("/{id}/eliminar")
+@PostMapping("/{id}/eliminar")
+    @Transactional
     public org.springframework.http.ResponseEntity<?> eliminarCuentaFisica(@PathVariable Integer id, @RequestBody java.util.Map<String, String> datos) {
         try {
             Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -217,6 +227,12 @@ public class UsuarioController {
             if (passwordConfirmacion == null || !usuario.getContraseña().equals(passwordConfirmacion)) {
                 return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("exito", false, "mensaje", "Contraseña incorrecta"));
             }
+            
+            seguidorRepository.deleteAllByIdSeguidor(id);
+            seguidorRepository.deleteAllByIdSeguido(id);
+            
+            bloqueoRepository.deleteAllByIdUsuarioBloqueador(id);
+            bloqueoRepository.deleteAllByIdUsuarioBloqueado(id);
             
             usuarioRepository.delete(usuario);
             
