@@ -89,31 +89,35 @@ public class UsuarioController {
     @PostMapping("/login")
     public org.springframework.http.ResponseEntity<?> login(@RequestBody Usuario loginData) {
         String correoNormalizado = loginData.getCorreo() != null ? loginData.getCorreo().trim().toLowerCase() : "";
-        
-        Usuario usuario = usuarioRepository.findByCorreo(correoNormalizado).orElse(null);
-        
-        if (usuario != null && usuario.getContraseña().equals(loginData.getContraseña())) {
-            
-            if (usuario.getSuspendido() != null && usuario.getSuspendido()) {
-                return org.springframework.http.ResponseEntity.status(403)
-                    .body(java.util.Map.of("exito", false, "mensaje", "Tu cuenta ha sido suspendida hasta nuevo aviso."));
-            }
 
-            java.util.Map<String, Object> respuesta = new java.util.HashMap<>();
-            respuesta.put("exito", true);
-            respuesta.put("idUsuario", usuario.getIdUsuario());
-            respuesta.put("nombre", usuario.getNombre());
-            respuesta.put("handle", usuario.getHandle()); 
-            respuesta.put("rol", usuario.getRol());
-            respuesta.put("onboardingCompletado", usuario.getOnboardingCompletado());
-            respuesta.put("imagenUrl", usuario.getImagenUrl());
-            respuesta.put("estadoAnimo", usuario.getEstadoAnimo()); 
-            
-            return org.springframework.http.ResponseEntity.ok(respuesta);
+        Usuario usuario = usuarioRepository.findByCorreo(correoNormalizado).orElse(null);
+
+        if (usuario == null) {
+            return org.springframework.http.ResponseEntity.badRequest()
+                .body(java.util.Map.of("exito", false, "mensaje", "Correo no registrado."));
         }
         
-        return org.springframework.http.ResponseEntity.badRequest()
-            .body(java.util.Map.of("exito", false, "mensaje", "Credenciales incorrectas"));
+        if (!usuario.getContraseña().equals(loginData.getContraseña())) {
+            return org.springframework.http.ResponseEntity.badRequest()
+                .body(java.util.Map.of("exito", false, "mensaje", "Contraseña incorrecta."));
+        }
+        
+        if (usuario.getSuspendido() != null && usuario.getSuspendido()) {
+            return org.springframework.http.ResponseEntity.status(403)
+                .body(java.util.Map.of("exito", false, "mensaje", "Tu cuenta ha sido suspendida hasta nuevo aviso."));
+        }
+
+        java.util.Map<String, Object> respuesta = new java.util.HashMap<>();
+        respuesta.put("exito", true);
+        respuesta.put("idUsuario", usuario.getIdUsuario());
+        respuesta.put("nombre", usuario.getNombre());
+        respuesta.put("handle", usuario.getHandle()); 
+        respuesta.put("rol", usuario.getRol());
+        respuesta.put("onboardingCompletado", usuario.getOnboardingCompletado());
+        respuesta.put("imagenUrl", usuario.getImagenUrl());
+        respuesta.put("estadoAnimo", usuario.getEstadoAnimo()); 
+        
+        return org.springframework.http.ResponseEntity.ok(respuesta);
     }
 
     @PatchMapping("/{id}/estado-suspension")

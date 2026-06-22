@@ -8,7 +8,7 @@ const auth = {
         return this.idActual !== null;
     },
 
-async login(correo, contrasena) {
+    async login(correo, contrasena) {
         try {
             const respuesta = await api.post('/usuarios/login', { correo, contraseña: contrasena });
             
@@ -32,14 +32,40 @@ async login(correo, contrasena) {
                 return { exito: false, mensaje: respuesta.mensaje || "Credenciales incorrectas" };
             }
         } catch (error) {
-            if (error && error.mensaje) {
-                return { exito: false, mensaje: error.mensaje };
-            }
-            return { exito: false, mensaje: "Credenciales incorrectas o tu cuenta fue suspendida." };
+            try {
+                const backendError = JSON.parse(error.message);
+                if (backendError && backendError.mensaje) {
+                    return { exito: false, mensaje: backendError.mensaje };
+                }
+            } catch(e) {}
+            
+            return { exito: false, mensaje: "Error de comunicación con el servidor." };
         }
     },
 
-    async registro(nombre, correo, contrasena) {
+    async registro(nombre, correo, contrasena, confirmarContrasena) {
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(correo)) {
+            return { exito: false, mensaje: "El formato del correo no es válido." };
+        }
+
+        if (contrasena !== confirmarContrasena) {
+            return { exito: false, mensaje: "Las contraseñas no coinciden. Intentá de nuevo." };
+        }
+
+        if (contrasena.length < 8) {
+            return { exito: false, mensaje: "La contraseña es demasiado corta. Debe tener al menos 8 caracteres." };
+        }
+
+        if (!/[A-Z]/.test(contrasena)) {
+            return { exito: false, mensaje: "La contraseña debe incluir al menos una letra mayúscula." };
+        }
+
+        if (!/[0-9]/.test(contrasena)) {
+            return { exito: false, mensaje: "La contraseña debe incluir al menos un número." };
+        }
+
         try {
             const respuesta = await api.post('/usuarios/registro', { nombre, correo, contraseña: contrasena });
             if (respuesta && respuesta.idUsuario) {
@@ -47,7 +73,16 @@ async login(correo, contrasena) {
             }
             return { exito: false, mensaje: "Error al crear la cuenta" };
         } catch (error) {
-            return { exito: false, mensaje: "Error de conexión" };
+            try {
+                const backendError = JSON.parse(error.message);
+                if (backendError.mensaje) {
+                    if (backendError.mensaje.includes("ya está registrado")) {
+                        return { exito: false, mensaje: "Ese correo ya existe. Por favor, iniciá sesión." };
+                    }
+                    return { exito: false, mensaje: backendError.mensaje };
+                }
+            } catch(e) {}
+            return { exito: false, mensaje: "Error de conexión con el servidor." };
         }
     },
 
