@@ -21,7 +21,7 @@ const api = {
                 body: JSON.stringify(data)
             });
             const text = await response.text();
-            if (!response.ok) throw new Error(text || `Error: ${response.status}`);           
+            if (!response.ok) throw new Error(text || `Error: ${response.status}`);          
             try { return JSON.parse(text); } catch { return text; }
         } catch (error) {
             console.error("API POST Error:", error);
@@ -35,8 +35,9 @@ const api = {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
+            const text = await response.text();
             if (!response.ok) throw new Error(text || `Error: ${response.status}`); 
-            return await response.json();
+            try { return JSON.parse(text); } catch { return text; }
         } catch (error) {
             console.error("API PUT Error:", error);
             throw error;
@@ -49,8 +50,9 @@ const api = {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            if (!response.ok) throw new Error(text || `Error: ${response.status}`);             
-            return await response.json();
+            const text = await response.text();
+            if (!response.ok) throw new Error(text || `Error: ${response.status}`);            
+            try { return JSON.parse(text); } catch { return text; }
         } catch (error) {
             console.error("API PATCH Error:", error);
             throw error;
