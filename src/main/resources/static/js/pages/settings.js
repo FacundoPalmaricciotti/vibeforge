@@ -139,9 +139,9 @@ let htmlEstructura = `
         }
 
         .sg-save-btn {
-            position: sticky !important;
-            bottom: 80px !important;
-            z-index: 10 !important;
+            position: static !important;
+            margin-top: 20px !important;
+            margin-bottom: 30px !important;
         }
     }
     </style>
