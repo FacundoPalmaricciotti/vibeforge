@@ -750,6 +750,7 @@ window.prepararRespuesta = function(idPensamiento, idPadre, nombreAutor, idUsuar
     const replyName = document.getElementById(`reply-name-${idPensamiento}`);
     const composer = document.getElementById(`composer-container-${idPensamiento}`);
     const btnJam = document.getElementById(`btn-jam-${idPensamiento}`);
+    
     if (composer && composer.style.display === 'none') {
         composer.style.display = 'block';
         if (btnJam) btnJam.style.color = '#00bcd4';
@@ -770,13 +771,12 @@ window.prepararRespuesta = function(idPensamiento, idPadre, nombreAutor, idUsuar
             input.value = `@${nombreLimpio} `; 
             input.placeholder = "Escribe tu respuesta...";
         }
+        setTimeout(() => {
+            if(input) input.focus();
+        }, 150);
+        
     } else {
         window.cancelarRespuesta(idPensamiento);
-    }
-    
-    if(input) {
-        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        input.focus();
     }
 };
 
@@ -784,23 +784,19 @@ window.cancelarRespuesta = function(idPensamiento, forzarCierreTeclado = false) 
     const hiddenPadre = document.getElementById(`replyPadre-${idPensamiento}`);
     const hiddenMention = document.getElementById(`replyMention-${idPensamiento}`);
     const replyBanner = document.getElementById(`reply-banner-${idPensamiento}`);
-    const input = document.getElementById(`input-comm-new-${idPensamiento}`);
-
-    if (hiddenPadre) hiddenPadre.value = '';
-    if (hiddenMention) hiddenMention.value = '';
-    if (replyBanner) replyBanner.style.display = 'none';
-
-    if (input) {
+    const input = document.getElementById(`input-comm-new-${idPensamiento}`);   
+    
+    if(hiddenPadre) hiddenPadre.value = '';
+    if(hiddenMention) hiddenMention.value = '';
+    if(replyBanner) replyBanner.style.display = 'none';
+    
+    if(input) {
         input.placeholder = "Suma tu barra...";
-        input.value = '';
-
+        input.value = ''; 
         if (forzarCierreTeclado) {
             input.blur();
-            setTimeout(() => {
-                input.blur();
-                document.body.style.height = 'auto';
-                setTimeout(() => document.body.style.height = '', 50);
-            }, 80);
+        } else {
+            setTimeout(() => { input.focus(); }, 150);
         }
     }
 };
