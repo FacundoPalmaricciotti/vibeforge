@@ -348,9 +348,27 @@ window.crearYAgregarAlbumPL = async function(idAlbum) {
 };
 
 window.ejecutarGuardadoAlbum = async function(idAlbum, idPlaylist) {
+
+    const modal = document.getElementById('modal-guardar-album');
+    if (modal) {
+        const cardInner = modal.querySelector('div');
+        if (cardInner) {
+            cardInner.innerHTML = `
+                <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
+                    <div class="noti-spinner" style="margin-bottom: 25px; width: 45px; height: 45px; border-width: 4px;"></div>
+                    <h3 style="color: white; margin: 0 0 10px 0; font-size: 1.3rem;">Sincronizando pistas...</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Viajando hasta Ohio 🚀</p>
+                </div>
+            `;
+        }
+    }
+
     try {
         const respuesta = await api.post(`/playlists/${idPlaylist}/album/${idAlbum}`);
-        document.getElementById('modal-guardar-album').remove();
+        
+        if (document.getElementById('modal-guardar-album')) {
+            document.getElementById('modal-guardar-album').remove();
+        }
         
         if (respuesta.agregadas === 0) {
             if (typeof mostrarMensajeAjustes === 'function') mostrarMensajeAjustes("Ese álbum ya estaba completo en la playlist", "error");
@@ -362,6 +380,9 @@ window.ejecutarGuardadoAlbum = async function(idAlbum, idPlaylist) {
         actualizarIconosAlbumSilencioso();
 
     } catch (e) {
+        if (document.getElementById('modal-guardar-album')) {
+            document.getElementById('modal-guardar-album').remove();
+        }
         alert("Error al guardar el álbum en la playlist.");
     }
 };
