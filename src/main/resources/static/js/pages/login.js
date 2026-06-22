@@ -221,8 +221,8 @@ async function ejecutarRegistro() {
 
     errorDiv.style.display = "none";
 
-    const resultado = await auth.registro(nombre, correo, pass);
-    
+    const resultado = await auth.registro(nombre, correo, pass, passConfirm);
+
     if (resultado.exito) {
         if (typeof ui !== 'undefined' && typeof ui.alerta === 'function') {
             ui.alerta("¡Bienvenido a la Forja!", "Cuenta creada con éxito. Ya podés iniciar sesión.", "success");

@@ -54,8 +54,8 @@ const auth = {
             return { exito: false, mensaje: "Las contraseñas no coinciden. Intentá de nuevo." };
         }
 
-        if (contrasena.length < 8) {
-            return { exito: false, mensaje: "La contraseña es demasiado corta. Debe tener al menos 8 caracteres." };
+        if (contrasena.length < 6) {
+            return { exito: false, mensaje: "La contraseña es demasiado corta. Debe tener al menos 6 caracteres." };
         }
 
         if (!/[A-Z]/.test(contrasena)) {
