@@ -19,6 +19,12 @@ public class AlbumController {
     @Autowired
     private AlbumRepository albumRepository;
 
+    @Autowired
+    private com.pp2.vibeforge.repositories.FavoritoAlbumRepository favoritoAlbumRepository;
+
+    @Autowired
+    private com.pp2.vibeforge.repositories.HistorialUsuarioRepository historialUsuarioRepository;
+
     @GetMapping
     public List<Album> obtenerTodos() {
         return albumRepository.findAll();
@@ -174,15 +180,19 @@ public class AlbumController {
         }
 
         try {
-
+            favoritoAlbumRepository.deleteByIdAlbum(id);
+            historialUsuarioRepository.deleteByTipoItemAndIdReferencia("ALBUM", id);
             java.util.List<com.pp2.vibeforge.models.Cancion> canciones = cancionRepository.findByIdAlbum(id);
+            
             if (!canciones.isEmpty()) {
+                for (com.pp2.vibeforge.models.Cancion c : canciones) {
+                    historialUsuarioRepository.deleteByTipoItemAndIdReferencia("CANCION", c.getIdCancion());
+                }
                 cancionRepository.deleteAll(canciones);
             }
-            
             albumRepository.delete(album);
             
-            return org.springframework.http.ResponseEntity.ok("Álbum y sus canciones eliminados permanentemente.");
+            return org.springframework.http.ResponseEntity.ok("Álbum y sus canciones eliminados permanentemente del ecosistema.");
             
         } catch (Exception e) {
             return org.springframework.http.ResponseEntity.internalServerError().body("Error crítico al purgar el álbum: " + e.getMessage());

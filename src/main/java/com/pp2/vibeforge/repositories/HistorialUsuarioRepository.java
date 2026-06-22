@@ -10,4 +10,7 @@ public interface HistorialUsuarioRepository extends JpaRepository<HistorialUsuar
     List<HistorialUsuario> findByIdUsuarioOrderByFechaVistaDesc(Integer idUsuario);
 
     Optional<HistorialUsuario> findByIdUsuarioAndTipoItemAndIdReferencia(Integer idUsuario, String tipoItem, Integer idReferencia);
+
+    @org.springframework.transaction.annotation.Transactional
+    void deleteByTipoItemAndIdReferencia(String tipoItem, Integer idReferencia);
 }

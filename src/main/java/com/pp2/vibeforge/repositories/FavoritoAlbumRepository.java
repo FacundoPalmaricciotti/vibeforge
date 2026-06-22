@@ -16,4 +16,7 @@ public interface FavoritoAlbumRepository extends JpaRepository<FavoritoAlbum, In
 
     @Query("SELECT f.idAlbum FROM FavoritoAlbum f WHERE f.idUsuario = :idUsuario")
     List<Integer> findIdsAlbumesByIdUsuario(@Param("idUsuario") Integer idUsuario);
+
+    @Transactional
+    void deleteByIdAlbum(Integer idAlbum);
 }
