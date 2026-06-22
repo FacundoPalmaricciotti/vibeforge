@@ -115,8 +115,23 @@ async function renderAlbum() {
             <style>
                 .fab-social { display: none !important; }
                 
-                .alb-wrapper { max-width: 950px; margin: 0 auto; display: block !important; text-align: left !important; width: 100%; }
-                
+                .alb-wrapper { 
+                    max-width: 950px; 
+                    margin: 0 auto; 
+                    display: block !important; 
+                    text-align: left !important; 
+                    width: 100%; 
+                    min-height: 100%;
+                }
+                .alb-wrapper,
+                #album-content {
+                    height: auto !important;
+                    overflow: visible !important;
+                }
+
+                #tracks-container {
+                    padding-bottom: 80px !important;
+                }               
                 .alb-header { display: flex; gap: 30px; align-items: flex-end; margin-bottom: 30px; padding: 30px 15px; justify-content: flex-start !important; }
                 .alb-cover { width: 260px; height: 260px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); object-fit: cover; flex-shrink: 0; }
                 
