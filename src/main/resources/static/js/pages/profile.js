@@ -630,12 +630,14 @@ window.cargarPensamientos = async function(idDueñoMuro, infoDueñoMuro, loSigue
                     </div>
 
                     <div id="box-comentarios-${p.idPensamiento}" style="display: none; border-top: 1px solid #222; padding-top: 15px; margin-top: 10px; max-height: 60vh; overflow-y: auto; flex-direction: column; position: relative;">
-                        <div class="mood-picker" id="moodPicker-${p.idPensamiento}" style="margin-bottom: 12px; display: flex; gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 5px; scrollbar-width: none;">
+                        
+                        <div class="mood-picker" id="moodPicker-${p.idPensamiento}" style="flex-shrink: 0; min-height: 40px; align-items: center; margin-bottom: 12px; display: flex; gap: 8px; overflow-x: auto; flex-wrap: nowrap; padding: 4px 0; scrollbar-width: none;">
                             <style>#moodPicker-${p.idPensamiento}::-webkit-scrollbar { display: none; }</style>
-                            <button class="mood-pill pill-banger selected" onclick="selectMoodLocal(${p.idPensamiento}, 'banger', this)" style="white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 4px 10px; display: inline-flex; align-items: center; justify-content: center;">${SVG_BANGER} OnFire</button>
-                            <button class="mood-pill pill-chill" onclick="selectMoodLocal(${p.idPensamiento}, 'chill', this)" style="white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 4px 10px; display: inline-flex; align-items: center; justify-content: center;">${SVG_CHILL} Chill</button>
-                            <button class="mood-pill pill-melancolico" onclick="selectMoodLocal(${p.idPensamiento}, 'melancolico', this)" style="white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 4px 10px; display: inline-flex; align-items: center; justify-content: center;">${SVG_MELANCOLICO} Melancólico</button>
-                            <button class="mood-pill pill-hyped" onclick="selectMoodLocal(${p.idPensamiento}, 'hyped', this)" style="white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 4px 10px; display: inline-flex; align-items: center; justify-content: center;">${SVG_HYPED} Hyped</button>
+                            
+                            <button class="mood-pill pill-banger selected" onclick="selectMoodLocal(${p.idPensamiento}, 'banger', this)" style="white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center; border-radius: 500px; height: 32px; border: 1px solid transparent; cursor: pointer;">${SVG_BANGER} OnFire</button>
+                            <button class="mood-pill pill-chill" onclick="selectMoodLocal(${p.idPensamiento}, 'chill', this)" style="white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center; border-radius: 500px; height: 32px; border: 1px solid transparent; cursor: pointer;">${SVG_CHILL} Chill</button>
+                            <button class="mood-pill pill-melancolico" onclick="selectMoodLocal(${p.idPensamiento}, 'melancolico', this)" style="white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center; border-radius: 500px; height: 32px; border: 1px solid transparent; cursor: pointer;">${SVG_MELANCOLICO} Melancólico</button>
+                            <button class="mood-pill pill-hyped" onclick="selectMoodLocal(${p.idPensamiento}, 'hyped', this)" style="white-space: nowrap; flex-shrink: 0; font-size: 11px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center; border-radius: 500px; height: 32px; border: 1px solid transparent; cursor: pointer;">${SVG_HYPED} Hyped</button>
                         </div>
                         
                         <div id="lista-comentarios-${p.idPensamiento}"></div>
