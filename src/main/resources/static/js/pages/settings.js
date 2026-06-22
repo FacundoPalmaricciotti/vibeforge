@@ -28,7 +28,7 @@ async function renderSettings() {
 
 let htmlEstructura = `
     <style>
-    body { background: #0a0a0a !important; overflow: hidden !important; }    
+    body { background: #0a0a0a !important; }   
     .sg-top-bar { display: flex; align-items: center; padding: 20px 30px; background: #0f0f0f; border-bottom: 1px solid #282828; position: sticky; top: 0; z-index: 100; flex-shrink: 0; }
     .sg-back-btn { background: #222; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; display: flex; gap: 10px; }
     .sg-back-btn:hover { background: #333; transform: scale(1.05); }
@@ -88,6 +88,61 @@ let htmlEstructura = `
         .sg-nav-item.active { border-left-color: transparent; border-bottom-color: var(--primary); }
         .sg-nav-sep { display: none; }
         .sg-body { padding: 25px 20px 160px 20px; flex: 1; overflow-y: auto; }
+    }
+
+    @media (max-width: 768px) {
+        .sg-root {
+            flex-direction: column !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            overflow: visible !important;
+            min-height: auto !important;
+        }
+
+        .sg-nav {
+            width: 100% !important;
+            border-right: none !important;
+            border-bottom: 1px solid #282828 !important;
+            padding: 10px 0 !important;
+            display: flex !important;
+            flex-direction: row !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            flex-shrink: 0 !important;
+        }
+
+        .sg-nav-item {
+            flex-direction: column !important;
+            gap: 4px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            white-space: nowrap !important;
+            border-left: none !important;
+            border-bottom: 3px solid transparent !important;
+            min-width: fit-content !important;
+        }
+
+        .sg-nav-item.active {
+            border-left-color: transparent !important;
+            border-bottom-color: var(--primary) !important;
+        }
+
+        .sg-nav-sep { display: none !important; }
+
+        .sg-body {
+            padding: 20px 15px !important;
+            padding-bottom: 120px !important;
+            overflow-y: visible !important;
+            min-height: auto !important;
+        }
+
+        .sg-save-btn {
+            position: sticky !important;
+            bottom: 80px !important;
+            z-index: 10 !important;
+        }
     }
     </style>
 
