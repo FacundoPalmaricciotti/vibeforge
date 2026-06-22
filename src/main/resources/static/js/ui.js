@@ -925,7 +925,7 @@ window.conectarWebSocketNotificaciones = function() {
     }
 
     const esLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const hostBase = esLocal ? 'localhost:8080' : 'TU-FUTURO-BACKEND.onrender.com';
+    const hostBase = esLocal ? 'localhost:8080' : 'vibeforge-backend.onrender.com';
     const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     
     const wsUrl = `${wsProtocol}${hostBase}/ws-notificaciones`;
