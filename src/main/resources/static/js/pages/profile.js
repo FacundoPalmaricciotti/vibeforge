@@ -642,11 +642,6 @@ window.cargarPensamientos = async function(idDueñoMuro, infoDueñoMuro, loSigue
                         
                         ${cajaComentariosHTML}
                     </div>
-                        
-                        <div id="lista-comentarios-${p.idPensamiento}"></div>
-                        
-                        ${cajaComentariosHTML}
-                    </div>
                 </div>
             `;
         });

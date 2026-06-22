@@ -194,6 +194,8 @@ async function ejecutarRegistro() {
     const pass = document.getElementById('reg-pass').value.trim();
     const passConfirm = document.getElementById('reg-pass-confirm').value.trim();
     const errorDiv = document.getElementById('reg-error');
+    const btn = document.querySelector('button[onclick="ejecutarRegistro()"]');
+    const textoOriginal = btn.innerText;
 
     if(!nombre || !correo || !pass || !passConfirm) {
         errorDiv.innerText = "Por favor completa todos los campos.";
@@ -207,8 +209,8 @@ async function ejecutarRegistro() {
         return;
     }
 
-    if (!regexPass.test(pass) || pass.length < 6) {
-        errorDiv.innerText = "La contraseña debe tener mínimo 6 caracteres, al menos 1 mayúscula y 1 número.";
+    if (!regexPass.test(pass) || pass.length < 8) {
+        errorDiv.innerText = "La contraseña debe tener mínimo 8 caracteres, al menos 1 mayúscula y 1 número.";
         errorDiv.style.display = "block";
         return;
     }
@@ -221,17 +223,30 @@ async function ejecutarRegistro() {
 
     errorDiv.style.display = "none";
 
-    const resultado = await auth.registro(nombre, correo, pass, passConfirm);
+    btn.innerText = 'Registrando...';
+    btn.style.pointerEvents = 'none';
+    btn.style.opacity = '0.5';
 
+    const resultado = await auth.registro(nombre, correo, pass, passConfirm);
+    
     if (resultado.exito) {
         if (typeof ui !== 'undefined' && typeof ui.alerta === 'function') {
             ui.alerta("¡Bienvenido a la Forja!", "Cuenta creada con éxito. Ya podés iniciar sesión.", "success");
         } else {
             alert("¡Cuenta creada con éxito! Ahora puedes iniciar sesión.");
         }
+        
+        btn.innerText = textoOriginal;
+        btn.style.pointerEvents = 'auto';
+        btn.style.opacity = '1';
+        
         cambiarALogin();
     } else {
         errorDiv.innerText = resultado.mensaje;
         errorDiv.style.display = "block";
+        
+        btn.innerText = textoOriginal;
+        btn.style.pointerEvents = 'auto';
+        btn.style.opacity = '1';
     }
 }
