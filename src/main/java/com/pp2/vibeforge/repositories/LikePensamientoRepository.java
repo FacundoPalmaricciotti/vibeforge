@@ -17,4 +17,7 @@ public interface LikePensamientoRepository extends JpaRepository<LikePensamiento
     
     @Query("SELECT l.idPensamiento FROM LikePensamiento l WHERE l.idUsuario = :idUsuario")
     List<Integer> findIdsByIdUsuario(@Param("idUsuario") Integer idUsuario);
+
+    @Transactional
+    void deleteAllByIdUsuario(Integer idUsuario);
 }

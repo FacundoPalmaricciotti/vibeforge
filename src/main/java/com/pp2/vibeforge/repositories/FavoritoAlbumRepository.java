@@ -19,4 +19,7 @@ public interface FavoritoAlbumRepository extends JpaRepository<FavoritoAlbum, In
 
     @Transactional
     void deleteByIdAlbum(Integer idAlbum);
+
+    @Transactional
+    void deleteAllByIdUsuario(Integer idUsuario);
 }

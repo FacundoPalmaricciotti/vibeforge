@@ -13,4 +13,7 @@ public interface HistorialUsuarioRepository extends JpaRepository<HistorialUsuar
 
     @org.springframework.transaction.annotation.Transactional
     void deleteByTipoItemAndIdReferencia(String tipoItem, Integer idReferencia);
+
+    @org.springframework.transaction.annotation.Transactional
+    void deleteAllByIdUsuario(Integer idUsuario);
 }

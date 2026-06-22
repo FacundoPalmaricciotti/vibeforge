@@ -16,4 +16,7 @@ public interface FavoritoArtistaRepository extends JpaRepository<FavoritoArtista
 
     @Query("SELECT f.idArtista FROM FavoritoArtista f WHERE f.idUsuario = :idUsuario")
     List<Integer> findIdsArtistasByIdUsuario(@Param("idUsuario") Integer idUsuario);
+
+    @Transactional
+    void deleteAllByIdUsuario(Integer idUsuario);
 }

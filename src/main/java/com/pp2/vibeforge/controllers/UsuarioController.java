@@ -18,7 +18,6 @@ import java.util.Random;
 public class UsuarioController {
 
     @Autowired private UsuarioRepository usuarioRepository;
-
     @Autowired private SeguidorRepository seguidorRepository;
     @Autowired private BloqueoRepository bloqueoRepository;
     @Autowired private PensamientoRepository pensamientoRepository;
@@ -26,6 +25,10 @@ public class UsuarioController {
     @Autowired private ComentarioLikeRepository comentarioLikeRepository;
     @Autowired private NotificacionRepository notificacionRepository;
     @Autowired private PlaylistRepository playlistRepository;
+    @Autowired private FavoritoAlbumRepository favoritoAlbumRepository;
+    @Autowired private FavoritoArtistaRepository favoritoArtistaRepository;
+    @Autowired private HistorialUsuarioRepository historialUsuarioRepository;
+    @Autowired private LikePensamientoRepository likePensamientoRepository;
 
     @PostConstruct
     public void parchearUsuariosViejos() {
@@ -226,7 +229,7 @@ public class UsuarioController {
             if (passwordConfirmacion == null || !usuario.getContraseña().equals(passwordConfirmacion)) {
                 return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("exito", false, "mensaje", "Contraseña incorrecta"));
             }
-
+            
             seguidorRepository.deleteAllByIdSeguidor(id);
             seguidorRepository.deleteAllByIdSeguido(id);
             bloqueoRepository.deleteAllByIdUsuarioBloqueador(id);
@@ -235,6 +238,10 @@ public class UsuarioController {
             notificacionRepository.deleteAllByIdEmisor(id);
             playlistRepository.deleteAllByIdUsuario(id);
             comentarioLikeRepository.deleteAllByIdUsuario(id);
+            likePensamientoRepository.deleteAllByIdUsuario(id);
+            favoritoAlbumRepository.deleteAllByIdUsuario(id);
+            favoritoArtistaRepository.deleteAllByIdUsuario(id);
+            historialUsuarioRepository.deleteAllByIdUsuario(id);
             comentarioRepository.deleteAllByIdUsuario(id);
             pensamientoRepository.deleteAllByIdUsuario(id);
             usuarioRepository.delete(usuario);
