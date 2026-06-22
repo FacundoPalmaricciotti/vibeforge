@@ -199,12 +199,12 @@ window.renderizarPaginaLocal = function() {
                 
                 <div class="botones-accion" style="display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: auto;">
                     <div style="display: flex; gap: 6px; width: 100%;">
-                        <button onclick="abrirEditorNombre(${a.idArtista}, '${a.nombreArtistico.replace(/'/g, "\\'").replace(/"/g, "&quot;")}')" style="flex: 1; padding: 6px; font-size: 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#444'" onmouseout="this.style.background='#333'">Editar</button>
+                        <button onclick="abrirEditorNombre(${a.idArtista})" style="flex: 1; padding: 6px; font-size: 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#444'" onmouseout="this.style.background='#333'">Editar</button>
                         <button onclick="solicitarMasAlbumes(${a.idArtista}, this)" style="flex: 1; padding: 6px; font-size: 12px; background: #1ed760; color: black; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#1fef6e'" onmouseout="this.style.background='#1ed760'">+ Álbumes</button>
                     </div>
                     <div style="display: flex; gap: 6px; width: 100%;">
                         <button onclick="cambiarVisibilidadArtista(${a.idArtista}, this)" style="flex: 1; padding: 6px; font-size: 12px; background: ${estaActivo ? '#ff9800' : '#4caf50'}; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">${estaActivo ? 'Ocultar' : 'Mostrar'}</button>
-                        <button onclick="eliminarArtistaDefinitivo(${a.idArtista}, '${a.nombreArtistico.replace(/'/g, "\\'").replace(/"/g, "&quot;")}')" style="flex: 1; padding: 6px; font-size: 12px; background: #e91e63; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#f03a75'" onmouseout="this.style.background='#e91e63'">Eliminar</button>
+                        <button onclick="eliminarArtistaDefinitivo(${a.idArtista})" style="flex: 1; padding: 6px; font-size: 12px; background: #e91e63; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#f03a75'" onmouseout="this.style.background='#e91e63'">Eliminar</button>
                     </div>
                 </div>
             </div>
@@ -296,7 +296,10 @@ window.mostrarConfirmacionVibeforge = function(titulo, mensaje) {
     });
 };
 
-window.eliminarArtistaDefinitivo = async function(id, nombre) {
+window.eliminarArtistaDefinitivo = async function(id) {
+    const artista = catalogoCompleto.find(a => a.idArtista === id);
+    const nombre = artista ? artista.nombreArtistico : 'este artista';
+
     const seguro = await mostrarConfirmacionVibeforge(
         "¿Desea eliminar al artista?", 
         `¿Estás completamente seguro de eliminar a <b>${nombre}</b>? Esta acción destruirá de forma permanente todos sus álbumes y pistas de audio de la base de datos local.`
@@ -338,7 +341,10 @@ window.solicitarMasAlbumes = async function(id, boton) {
         boton.innerText = textoOriginal;
     }
 };
-window.abrirEditorNombre = function(id, nombreActual) {
+window.abrirEditorNombre = function(id) {
+    const artista = catalogoCompleto.find(a => a.idArtista === id);
+    const nombreActual = artista ? artista.nombreArtistico : '';
+
     const modalExistente = document.getElementById('modal-vibeforge-edicion');
     if (modalExistente) modalExistente.remove();
 
@@ -348,7 +354,7 @@ window.abrirEditorNombre = function(id, nombreActual) {
                 <h3 style="color: white; margin-top: 0; margin-bottom: 20px; font-size: 1.5rem;">Renombrar Artista</h3>
                 
                 <label style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block;">Nombre Artístico</label>
-                <input type="text" id="input-nuevo-nombre" value="${nombreActual}" 
+                <input type="text" id="input-nuevo-nombre" value="${nombreActual.replace(/"/g, '&quot;')}" 
                        style="width: 100%; padding: 14px; background: #222; color: white; border: 1px solid #444; border-radius: 500px; margin-bottom: 25px; box-sizing: border-box; outline: none; font-size: 14px; transition: 0.2s;"
                        onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='#444'">
                 
