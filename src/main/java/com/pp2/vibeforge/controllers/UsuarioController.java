@@ -1,12 +1,10 @@
 package com.pp2.vibeforge.controllers;
 
-import com.pp2.vibeforge.repositories.SeguidorRepository;
-import com.pp2.vibeforge.repositories.BloqueoRepository;
-import org.springframework.transaction.annotation.Transactional;
 import com.pp2.vibeforge.models.Usuario;
-import com.pp2.vibeforge.repositories.UsuarioRepository;
+import com.pp2.vibeforge.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.annotation.PostConstruct;
 
 import java.time.LocalDateTime;
@@ -19,14 +17,15 @@ import java.util.Random;
 @CrossOrigin(origins = "*")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    @Autowired private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private SeguidorRepository seguidorRepository;
-
-    @Autowired
-    private BloqueoRepository bloqueoRepository;
+    @Autowired private SeguidorRepository seguidorRepository;
+    @Autowired private BloqueoRepository bloqueoRepository;
+    @Autowired private PensamientoRepository pensamientoRepository;
+    @Autowired private ComentarioRepository comentarioRepository;
+    @Autowired private ComentarioLikeRepository comentarioLikeRepository;
+    @Autowired private NotificacionRepository notificacionRepository;
+    @Autowired private PlaylistRepository playlistRepository;
 
     @PostConstruct
     public void parchearUsuariosViejos() {
@@ -217,7 +216,7 @@ public class UsuarioController {
         return org.springframework.http.ResponseEntity.ok(usuario);
     }
 
-@PostMapping("/{id}/eliminar")
+    @PostMapping("/{id}/eliminar")
     @Transactional
     public org.springframework.http.ResponseEntity<?> eliminarCuentaFisica(@PathVariable Integer id, @RequestBody java.util.Map<String, String> datos) {
         try {
@@ -227,18 +226,23 @@ public class UsuarioController {
             if (passwordConfirmacion == null || !usuario.getContraseña().equals(passwordConfirmacion)) {
                 return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("exito", false, "mensaje", "Contraseña incorrecta"));
             }
-            
+
             seguidorRepository.deleteAllByIdSeguidor(id);
             seguidorRepository.deleteAllByIdSeguido(id);
-            
             bloqueoRepository.deleteAllByIdUsuarioBloqueador(id);
             bloqueoRepository.deleteAllByIdUsuarioBloqueado(id);
-            
+            notificacionRepository.deleteAllByIdUsuario(id);
+            notificacionRepository.deleteAllByIdEmisor(id);
+            playlistRepository.deleteAllByIdUsuario(id);
+            comentarioLikeRepository.deleteAllByIdUsuario(id);
+            comentarioRepository.deleteAllByIdUsuario(id);
+            pensamientoRepository.deleteAllByIdUsuario(id);
             usuarioRepository.delete(usuario);
             
             return org.springframework.http.ResponseEntity.ok(java.util.Map.of("exito", true));
             
         } catch (Exception e) {
+            e.printStackTrace();
             return org.springframework.http.ResponseEntity.badRequest().body(java.util.Map.of("exito", false, "mensaje", "No se pudo eliminar la cuenta. Verifica dependencias en base de datos."));
         }
     }

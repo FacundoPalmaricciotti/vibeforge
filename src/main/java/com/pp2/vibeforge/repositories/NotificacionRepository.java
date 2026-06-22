@@ -22,4 +22,11 @@ public interface NotificacionRepository extends JpaRepository<Notificacion, Inte
     @Transactional
     @Query("DELETE FROM Notificacion n WHERE n.idUsuario = :idUsuario AND n.idEmisor = :idEmisor AND n.tipoAccion = :tipoAccion AND n.idReferencia = :idReferencia")
     void borrarNotificacionExacta(@Param("idUsuario") Integer idUsuario, @Param("idEmisor") Integer idEmisor, @Param("tipoAccion") String tipoAccion, @Param("idReferencia") Integer idReferencia);
+
+    @org.springframework.transaction.annotation.Transactional
+    void deleteAllByIdUsuario(Integer idUsuario);
+    
+    @org.springframework.transaction.annotation.Transactional
+    void deleteAllByIdEmisor(Integer idEmisor);
+
 }

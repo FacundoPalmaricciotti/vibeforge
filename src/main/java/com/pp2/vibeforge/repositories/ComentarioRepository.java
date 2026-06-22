@@ -7,4 +7,6 @@ import java.util.List;
 public interface ComentarioRepository extends JpaRepository<Comentario, Integer> {
     
     List<Comentario> findByIdPensamientoOrderByFechaPublicacionAsc(Integer idPensamiento);
+    @org.springframework.transaction.annotation.Transactional
+    void deleteAllByIdUsuario(Integer idUsuario);
 }

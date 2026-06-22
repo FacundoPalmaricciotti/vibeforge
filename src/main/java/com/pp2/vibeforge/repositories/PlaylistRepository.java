@@ -8,4 +8,7 @@ import java.util.List;
 @Repository
 public interface PlaylistRepository extends JpaRepository<Playlist, Integer> {
     List<Playlist> findByIdUsuario(Integer idUsuario);
+
+    @org.springframework.transaction.annotation.Transactional
+    void deleteAllByIdUsuario(Integer idUsuario);
 }

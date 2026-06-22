@@ -15,4 +15,7 @@ public interface ComentarioLikeRepository extends JpaRepository<ComentarioLike, 
 
     @Query("SELECT c.idComentario FROM ComentarioLike c WHERE c.idUsuario = :idUsuario")
     List<Integer> findIdsComentariosByIdUsuario(@Param("idUsuario") Integer idUsuario);
+
+    @org.springframework.transaction.annotation.Transactional
+    void deleteAllByIdUsuario(Integer idUsuario);
 }

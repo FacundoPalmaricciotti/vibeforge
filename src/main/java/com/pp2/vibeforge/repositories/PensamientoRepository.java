@@ -6,7 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PensamientoRepository extends JpaRepository<Pensamiento, Integer> {
-    
+
+        
     Page<Pensamiento> findAllByOrderByFechaPublicacionDesc(Pageable pageable);
     Page<Pensamiento> findByIdUsuarioOrderByFechaPublicacionDesc(Integer idUsuario, Pageable pageable);
+    @org.springframework.transaction.annotation.Transactional
+    void deleteAllByIdUsuario(Integer idUsuario);
 }
