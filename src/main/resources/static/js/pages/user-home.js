@@ -42,7 +42,7 @@ async function renderUserHome() {
     }
 
     let contenidoHTML = `
-        <div class="home-wrapper" style="padding-top: 10px;">
+        <div class="home-wrapper" style="padding-top: 10px; padding-bottom: 160px;">
             <h2 id="home-saludo" style="margin-bottom: 20px; font-size: 1.8rem; display: flex; align-items: center;">${saludoHora}</h2>
             
             <div id="home-historial-section" class="grid-historial" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-bottom: 40px;">

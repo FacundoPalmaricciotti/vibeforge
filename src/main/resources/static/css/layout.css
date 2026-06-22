@@ -293,7 +293,7 @@
 @media (max-width: 768px) {
   .app-layout { flex-direction: column; }
   
-  .sidebar {
+.sidebar {
     order: 2; 
     width: 100%; 
     min-width: 100%; 
@@ -316,7 +316,7 @@
   }
 
   .content-area {
-    padding-bottom: 180px !important;
+    padding-bottom: 220px !important;
     height: 100% !important;
     overflow-y: auto !important;
   }
