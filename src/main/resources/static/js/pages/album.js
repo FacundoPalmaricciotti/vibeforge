@@ -397,6 +397,24 @@ window.dibujarPlaylistsEnModalUniversal = function() {
 };
 
 window.toggleGuardadoUniversal = async function(idPlaylist) {
+    
+    const playlistElement = event.currentTarget;
+    const esParaAgregar = playlistElement.innerHTML.includes(SVG_PLUS);
+    
+    if (esParaAgregar) {
+        playlistElement.style.background = 'rgba(30, 215, 96, 0.1)';
+        playlistElement.style.borderColor = '#1ed760';
+        playlistElement.style.color = '#1ed760';
+        playlistElement.innerHTML = `<span style="font-weight: bold;">${playlistElement.querySelector('span').innerText}</span><span style="display:flex; align-items:center; gap:5px;">${SVG_CHECK} Agregado</span>`;
+    } else {
+        playlistElement.style.background = '#282828';
+        playlistElement.style.borderColor = '#444';
+        playlistElement.style.color = 'white';
+        playlistElement.innerHTML = `<span style="font-weight: bold;">${playlistElement.querySelector('span').innerText}</span><span style="display:flex; align-items:center; gap:5px; color: var(--text-muted);">${SVG_PLUS} Agregar</span>`;
+    }
+
+    playlistElement.style.pointerEvents = 'none';
+
     try {
         if (modalTipoActual === 'cancion') {
             const laTengo = window.mapaGuardadas[modalIdActual] && window.mapaGuardadas[modalIdActual].includes(idPlaylist);
@@ -429,8 +447,13 @@ window.toggleGuardadoUniversal = async function(idPlaylist) {
                 }
             }
         }
+    } catch(e) {
+        console.error("Error guardando:", e);
         dibujarPlaylistsEnModalUniversal();
-    } catch(e) {}
+        alert("Ocurrió un error al guardar. Revisa tu conexión.");
+    } finally {
+        playlistElement.style.pointerEvents = 'auto';
+    }
 };
 
 window.crearYAgregarPLUniversal = async function() {
