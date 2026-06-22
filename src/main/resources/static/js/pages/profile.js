@@ -780,11 +780,12 @@ window.prepararRespuesta = function(idPensamiento, idPadre, nombreAutor, idUsuar
     }
 };
 
-window.cancelarRespuesta = function(idPensamiento) {
+window.cancelarRespuesta = function(idPensamiento, forzarCierreTeclado = false) {
     const hiddenPadre = document.getElementById(`replyPadre-${idPensamiento}`);
     const hiddenMention = document.getElementById(`replyMention-${idPensamiento}`);
     const replyBanner = document.getElementById(`reply-banner-${idPensamiento}`);
-    const input = document.getElementById(`input-comm-new-${idPensamiento}`);    
+    const input = document.getElementById(`input-comm-new-${idPensamiento}`);   
+    
     if(hiddenPadre) hiddenPadre.value = '';
     if(hiddenMention) hiddenMention.value = '';
     if(replyBanner) replyBanner.style.display = 'none';
@@ -792,7 +793,11 @@ window.cancelarRespuesta = function(idPensamiento) {
     if(input) {
         input.placeholder = "Suma tu barra...";
         input.value = ''; 
-        input.focus();
+        if (forzarCierreTeclado) {
+            input.blur();
+        } else {
+            input.focus();
+        }
     }
 };
 
@@ -801,7 +806,7 @@ function deconstruirTarjetaComentario(c, esRespuesta, idPensamiento, infoAutor, 
     const moodKey = (c.mood || 'CHILL').toLowerCase();
     const cfg = moodConfig[moodKey] || moodConfig['chill'];
     const esPropietario = parseInt(c.idUsuario) === parseInt(auth.idActual);
-    const esAdminGlobal = auth.rolActual === 'ADMIN';    
+    const esAdminGlobal = auth.rolActual === 'ADMIN';   
     const esAdminComentando = infoAutor.rol === 'ADMIN';
     const clickAccion = esAdminComentando ? '' : `onclick="navigate('/user/profile?id=${c.idUsuario}')"`;
     const cursorEstilo = esAdminComentando ? 'cursor: default;' : 'cursor: pointer;';
@@ -809,13 +814,14 @@ function deconstruirTarjetaComentario(c, esRespuesta, idPensamiento, infoAutor, 
     const badgeAdmin = esAdminComentando ? `<span style="background: rgba(30, 215, 96, 0.15); color: #1ed760; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 800; margin-left: 6px; border: 1px solid rgba(30, 215, 96, 0.3);">ADMIN</span>` : '';
     const tieneWave = window.wavesComentariosReales.has(c.idComentario);
     const colorWave = tieneWave ? '#00bcd4' : '#aaa';
-    const timestamp = new Date(c.fechaPublicacion).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});    
+    const timestamp = new Date(c.fechaPublicacion).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});   
     const identidadPrincipal = infoAutor.handle ? `@${infoAutor.handle}` : infoAutor.nombre;
+    const nombreParaRespuesta = (infoAutor.handle || infoAutor.nombre).replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
     let opcionesAccion = '';
     if (esPropietario) {
         opcionesAccion = `
-            <span onclick="abrirModalEditarComentario(${c.idComentario}, ${idPensamiento}, '${c.contenido.replace(/'/g, "\\'")}')" 
+            <span onclick="abrirModalEditarComentario(${c.idComentario}, ${idPensamiento}, '${c.contenido.replace(/'/g, "\\'").replace(/"/g, "&quot;")}')" 
                   style="cursor:pointer; display:flex; align-items:center; gap:4px; color:var(--text-muted); font-size:12px; flex-shrink: 0;" title="Editar">${svgEdit}</span>
             <span onclick="abrirModalEliminarComentario(${c.idComentario}, ${idPensamiento})" 
                   style="cursor:pointer; display:flex; align-items:center; gap:4px; color:#e91e63; font-size:12px; flex-shrink: 0;" title="Borrar">${svgDelete}</span>
@@ -835,7 +841,7 @@ function deconstruirTarjetaComentario(c, esRespuesta, idPensamiento, infoAutor, 
                     </div>
                     <div style="font-size: 13px; color: #ddd; margin-top: 2px; word-wrap: break-word; line-height: 1.3;">${c.contenido}</div>                    
                     <div style="display: flex; align-items: center; gap: 12px; margin-top: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;">
-                        <span style="font-size: 11px; color: var(--text-muted); font-weight: bold; cursor: pointer; flex-shrink: 0;" onclick="prepararRespuesta(${idPensamiento}, ${c.idPadre}, '${infoAutor.handle || infoAutor.nombre}', ${c.idUsuario})">Responder</span>
+                        <span style="font-size: 11px; color: var(--text-muted); font-weight: bold; cursor: pointer; flex-shrink: 0;" onclick="prepararRespuesta(${idPensamiento}, ${c.idPadre}, '${nombreParaRespuesta}', ${c.idUsuario})">Responder</span>
                         ${opcionesAccion}
                     </div>
                 </div>
@@ -857,7 +863,7 @@ function deconstruirTarjetaComentario(c, esRespuesta, idPensamiento, infoAutor, 
                     <div style="display: flex; align-items: center; gap: 4px; color: ${colorWave}; cursor: pointer; font-size: 12px; font-weight: bold; flex-shrink: 0;" onclick="doWaveDB(this, ${c.idComentario}, '${moodKey}', ${c.idUsuario})">
                         ${SVG_WAVE_COMMENT} <span class="wave-count">${c.cantidadWaves || 0}</span>
                     </div>
-                    <span style="font-size: 12px; color: var(--text-muted); font-weight: bold; cursor: pointer; flex-shrink: 0;" onclick="prepararRespuesta(${idPensamiento}, ${c.idComentario}, '${infoAutor.handle || infoAutor.nombre}', ${c.idUsuario})">Responder</span>
+                    <span style="font-size: 12px; color: var(--text-muted); font-weight: bold; cursor: pointer; flex-shrink: 0;" onclick="prepararRespuesta(${idPensamiento}, ${c.idComentario}, '${nombreParaRespuesta}', ${c.idUsuario})">Responder</span>
                     ${opcionesAccion}
                 </div>
                 <div class="replies-thread" style="display: ${respuestasHTML ? 'block' : 'none'}; margin-top: 10px; border-left: 1px solid #333; padding-left: 10px;">
@@ -892,11 +898,13 @@ window.enviarComentarioMaster = async function(idPensamiento, idDueñoDestino) {
     const selectMood = document.getElementById(`currentMood-${idPensamiento}`);
     const mood = isReply ? 'CHILL' : (selectMood ? selectMood.value : 'CHILL');
 
+    inputElement.blur();
+
     try {
         const respuestaJava = await api.post('/comentarios', { idPensamiento, idUsuario: auth.idActual, idPadre, contenido, mood });
         
         inputElement.value = '';
-        window.cancelarRespuesta(idPensamiento);
+        window.cancelarRespuesta(idPensamiento, true);
         
         await renderizarComentarios(idPensamiento, true);
         
@@ -911,7 +919,7 @@ window.enviarComentarioMaster = async function(idPensamiento, idDueñoDestino) {
             setTimeout(() => {
                 const nuevoEl = document.getElementById(`card-comment-${nuevoId}`);
                 if (nuevoEl) {
-                    nuevoEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    nuevoEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     nuevoEl.style.transition = 'all 0.5s ease';
                     nuevoEl.style.backgroundColor = 'rgba(30, 215, 96, 0.1)';
                     nuevoEl.style.boxShadow = '0 0 15px rgba(30, 215, 96, 0.4)';
@@ -922,7 +930,7 @@ window.enviarComentarioMaster = async function(idPensamiento, idDueñoDestino) {
                         nuevoEl.style.borderColor = '';
                     }, 2000);
                 }
-            }, 100);
+            }, 300);
         }
         
         if (isReply) {
