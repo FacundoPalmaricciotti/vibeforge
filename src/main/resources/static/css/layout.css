@@ -72,8 +72,10 @@
   flex: 1;
   min-height: 0;
   padding: var(--spacing-lg);
+  padding-bottom: 120px; 
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; 
 }
 
 .topbar-nav-container {
@@ -286,17 +288,24 @@
 
 @media (max-width: 768px) {
   .app-layout { flex-direction: column; }
+  
   .sidebar {
     order: 2; width: 100%; min-width: 100%; height: 65px; min-height: 65px;
     flex-direction: row; padding: 0; border-right: none; border-top: 1px solid #282828;
     position: fixed; bottom: 0; left: 0; z-index: 10000; background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(10px);
+  }
+  .main-area { 
+    padding-bottom: 0; 
+  }
+  .content-area {
+    padding-bottom: 150px !important; 
   }
 
   .logo { display: none; }
   .nav-links { flex-direction: row; width: 100%; justify-content: space-around; align-items: center; gap: 0; }
   .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; padding: 5px; gap: 4px; }
   .nav-item-text { display: none; }
-  .main-area { padding-bottom: 65px; }
+  
   .topbar { 
     padding: 0 10px; 
     height: 60px; 
@@ -309,6 +318,7 @@
 
   .topbar-nav-container { gap: 5px; }
   .nav-arrow { width: 28px; height: 28px; }
+  
   .search-container {
     margin-left: 5px;
     max-width: none; 
@@ -320,6 +330,7 @@
     width: 100%;
   }
   .search-icon { left: 10px; }
+  
   .topbar-user {
     gap: 8px;
     display: flex;
@@ -375,23 +386,22 @@
   #playlist-content .fab-social, 
   #album-content .fab-social {
     display: none !important;
-}
+  }
+  
   .fab-social {
     bottom: 85px !important;
     right: 20px !important;
     transform: scale(0.9);
   }
-}
 
-@media (max-width: 768px) {
-    .alb-header,
-    #album-content .alb-header {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        text-align: left !important;
-    }
-    
-    #album-content .alb-actions {
-        justify-content: flex-start !important;
-    }
+  .alb-header,
+  #album-content .alb-header {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      text-align: left !important;
+  }
+  
+  #album-content .alb-actions {
+      justify-content: flex-start !important;
+  }
 }
