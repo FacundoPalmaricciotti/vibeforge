@@ -52,7 +52,7 @@ async function renderSettings() {
     .sg-nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
     .sg-nav-item.active { background: rgba(255,255,255,0.08); color: white; font-weight: bold; border-left-color: var(--primary); }
     .sg-nav-sep { height: 1px; background: #282828; margin: 15px 24px; }
-    .sg-body { flex: 1; min-width: 0; padding: 40px 50px; overflow-y: visible; background: #181818; position: relative; }
+    .sg-body { flex: 1; min-width: 0; padding: 40px 50px; overflow-y: auto; background: #181818; position: relative; }
     .sg-section { display: none; animation: fadeIn 0.3s ease; }
     .sg-section.active { display: block; }
     .sg-eyebrow { font-size: 12px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 10px; }    
@@ -95,20 +95,26 @@ async function renderSettings() {
     
     @media (max-width: 768px) {
         .sg-top-bar { padding: 15px 20px; }
-        .sg-root { flex-direction: column; margin: 0; width: 100%; border-radius: 0; min-height: auto !important; height: auto !important; border: none; overflow: visible !important; }
+        .sg-root { flex-direction: column; margin: 0; width: 100%; border-radius: 0; min-height: 100vh; height: auto; border: none; }
         .sg-nav { width: 100%; display: flex; overflow-x: auto; border-right: none; border-bottom: 1px solid #282828; padding: 10px; }
         .sg-nav-item { border-left: none; border-bottom: 3px solid transparent; white-space: nowrap; padding: 10px 15px;}
         .sg-nav-item.active { border-left-color: transparent; border-bottom-color: var(--primary); }
         .sg-nav-sep { display: none; }
+        .sg-body { padding: 25px 20px; }
+        .sg-root { 
+            min-height: 100vh; 
+            height: auto !important; 
+            margin: 0; 
+            border-radius: 0; 
+        }
         .sg-body {
-            padding: 25px 20px 180px 20px !important;
-            min-height: auto !important;
-            overflow-y: visible !important;
+            padding-bottom: 120px !important;
+            min-height: calc(100vh - 60px);
         }
     }
     </style>
 
-    <div style="display: flex; flex-direction: column;">
+    <div style="min-height: 100vh; display: flex; flex-direction: column;">
         <header class="sg-top-bar animate__animated animate__fadeInDown">
             <button class="sg-back-btn" onclick="navigate('/user/home')" title="Volver al inicio">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
