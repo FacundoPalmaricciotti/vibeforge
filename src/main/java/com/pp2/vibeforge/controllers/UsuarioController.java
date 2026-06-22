@@ -65,7 +65,16 @@ public class UsuarioController {
     }
 
     @PostMapping("/registro")
-    public Usuario registrar(@RequestBody Usuario usuario) {
+    public org.springframework.http.ResponseEntity<?> registrar(@RequestBody Usuario usuario) {
+        if (usuario.getCorreo() != null) {
+            usuario.setCorreo(usuario.getCorreo().trim().toLowerCase());
+        }
+
+        if (usuarioRepository.findByCorreo(usuario.getCorreo()).isPresent()) {
+            return org.springframework.http.ResponseEntity.badRequest()
+                .body(java.util.Map.of("exito", false, "mensaje", "Este correo electrónico ya está registrado."));
+        }
+
         usuario.setImagenUrl("https://api.dicebear.com/7.x/initials/svg?seed=User&backgroundColor=cccccc");
         usuario.setSuspendido(false); 
         
@@ -73,12 +82,15 @@ public class UsuarioController {
             usuario.setHandle(generarHandleUnico(usuario.getNombre(), usuario.getRol()));
         }
         
-        return usuarioRepository.save(usuario);
+        Usuario nuevoUsuario = usuarioRepository.save(usuario);
+        return org.springframework.http.ResponseEntity.ok(nuevoUsuario);
     }
 
     @PostMapping("/login")
     public org.springframework.http.ResponseEntity<?> login(@RequestBody Usuario loginData) {
-        Usuario usuario = usuarioRepository.findByCorreo(loginData.getCorreo()).orElse(null);
+        String correoNormalizado = loginData.getCorreo() != null ? loginData.getCorreo().trim().toLowerCase() : "";
+        
+        Usuario usuario = usuarioRepository.findByCorreo(correoNormalizado).orElse(null);
         
         if (usuario != null && usuario.getContraseña().equals(loginData.getContraseña())) {
             
