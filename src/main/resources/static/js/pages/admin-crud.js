@@ -199,12 +199,12 @@ window.renderizarPaginaLocal = function() {
                 
                 <div class="botones-accion" style="display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: auto;">
                     <div style="display: flex; gap: 6px; width: 100%;">
-                        <button onclick="abrirEditorNombre(${a.idArtista}, '${a.nombreArtistico.replace(/'/g, "&#39;")}')" style="flex: 1; padding: 6px; font-size: 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#444'" onmouseout="this.style.background='#333'">Editar</button>
+                        <button onclick="abrirEditorNombre(${a.idArtista}, '${a.nombreArtistico.replace(/'/g, "\\'").replace(/"/g, "&quot;")}')" style="flex: 1; padding: 6px; font-size: 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#444'" onmouseout="this.style.background='#333'">Editar</button>
                         <button onclick="solicitarMasAlbumes(${a.idArtista}, this)" style="flex: 1; padding: 6px; font-size: 12px; background: #1ed760; color: black; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#1fef6e'" onmouseout="this.style.background='#1ed760'">+ Álbumes</button>
                     </div>
                     <div style="display: flex; gap: 6px; width: 100%;">
                         <button onclick="cambiarVisibilidadArtista(${a.idArtista}, this)" style="flex: 1; padding: 6px; font-size: 12px; background: ${estaActivo ? '#ff9800' : '#4caf50'}; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'">${estaActivo ? 'Ocultar' : 'Mostrar'}</button>
-                        <button onclick="eliminarArtistaDefinitivo(${a.idArtista}, '${a.nombreArtistico.replace(/'/g, "&#39;")}')" style="flex: 1; padding: 6px; font-size: 12px; background: #e91e63; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#f03a75'" onmouseout="this.style.background='#e91e63'">Eliminar</button>
+                        <button onclick="eliminarArtistaDefinitivo(${a.idArtista}, '${a.nombreArtistico.replace(/'/g, "\\'").replace(/"/g, "&quot;")}')" style="flex: 1; padding: 6px; font-size: 12px; background: #e91e63; color: white; border: none; border-radius: 4px; cursor: pointer; transition:0.2s;" onmouseover="this.style.background='#f03a75'" onmouseout="this.style.background='#e91e63'">Eliminar</button>
                     </div>
                 </div>
             </div>
