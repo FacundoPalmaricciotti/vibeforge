@@ -28,18 +28,24 @@ async function renderSettings() {
 
 let htmlEstructura = `
     <style>
-    body { background: #0a0a0a !important; }   
+    body { background: #0a0a0a !important; overflow: hidden !important; }    
     .sg-top-bar { display: flex; align-items: center; padding: 20px 30px; background: #0f0f0f; border-bottom: 1px solid #282828; position: sticky; top: 0; z-index: 100; flex-shrink: 0; }
     .sg-back-btn { background: #222; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; display: flex; gap: 10px; }
     .sg-back-btn:hover { background: #333; transform: scale(1.05); }
-    .sg-root { display: flex; gap: 0; width: 900px; max-width: 95%; flex: 1; min-height: 0; background: #121212; border: 1px solid #282828; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin: 20px auto; }    
+    
+    /* FIX: PC usa un cuadro centrado */
+    .sg-root { display: flex; gap: 0; width: 900px; max-width: 95%; height: 680px; background: #121212; border: 1px solid #282828; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin: 40px auto; }    
+    
     .sg-nav { width: 240px; flex-shrink: 0; border-right: 1px solid #282828; padding: 20px 0; background: #0f0f0f; overflow-y: auto; }
     .sg-nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 24px; font-size: 14px; color: var(--text-muted); cursor: pointer; transition: 0.2s; border-left: 3px solid transparent; font-weight: 500;}
     .sg-nav-item svg { width: 18px; height: 18px; }
     .sg-nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
     .sg-nav-item.active { background: rgba(255,255,255,0.08); color: white; font-weight: bold; border-left-color: var(--primary); }
     .sg-nav-sep { height: 1px; background: #282828; margin: 15px 24px; }
-    .sg-body { flex: 1; min-width: 0; min-height: 0; padding: 40px 50px; overflow-y: auto; background: #181818; position: relative; padding-bottom: 120px; }
+    
+    /* FIX: PC scroll normal */
+    .sg-body { flex: 1; min-width: 0; padding: 40px 50px; overflow-y: auto; background: #181818; position: relative; }
+    
     .sg-section { display: none; animation: fadeIn 0.3s ease; }
     .sg-section.active { display: block; }
     .sg-eyebrow { font-size: 12px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 10px; }    
@@ -82,71 +88,58 @@ let htmlEstructura = `
     
     @media (max-width: 768px) {
         .sg-top-bar { padding: 15px 20px; }
-        .sg-root { flex-direction: column; margin: 0; width: 100%; max-width: 100%; border-radius: 0; border: none; flex: 1; min-height: 0; }
-        .sg-nav { width: 100%; display: flex; overflow-x: auto; border-right: none; border-bottom: 1px solid #282828; padding: 10px; flex-shrink: 0;}
-        .sg-nav-item { border-left: none; border-bottom: 3px solid transparent; white-space: nowrap; padding: 10px 15px;}
-        .sg-nav-item.active { border-left-color: transparent; border-bottom-color: var(--primary); }
-        .sg-nav-sep { display: none; }
-        .sg-body { padding: 25px 20px 160px 20px; flex: 1; overflow-y: auto; }
-    }
-
-    @media (max-width: 768px) {
-        .sg-root {
-            flex-direction: column !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            border-radius: 0 !important;
-            margin: 0 !important;
-            overflow: visible !important;
-            min-height: auto !important;
+        .sg-root { 
+            flex-direction: column !important; 
+            margin: 0 !important; 
+            width: 100% !important; 
+            max-width: 100% !important; 
+            border-radius: 0 !important; 
+            border: none !important; 
+            height: 100% !important; 
+            box-shadow: none !important;
         }
 
-        .sg-nav {
-            width: 100% !important;
-            border-right: none !important;
-            border-bottom: 1px solid #282828 !important;
-            padding: 10px 0 !important;
-            display: flex !important;
-            flex-direction: row !important;
-            overflow-x: auto !important;
-            overflow-y: hidden !important;
+        .sg-nav { 
+            width: 100% !important; 
+            display: flex !important; 
+            overflow-x: auto !important; 
+            border-right: none !important; 
+            border-bottom: 1px solid #282828 !important; 
+            padding: 10px !important; 
             flex-shrink: 0 !important;
         }
-
-        .sg-nav-item {
-            flex-direction: column !important;
-            gap: 4px !important;
-            padding: 8px 14px !important;
-            font-size: 11px !important;
-            white-space: nowrap !important;
-            border-left: none !important;
-            border-bottom: 3px solid transparent !important;
-            min-width: fit-content !important;
+        
+        .sg-nav-item { 
+            border-left: none !important; 
+            border-bottom: 3px solid transparent !important; 
+            white-space: nowrap !important; 
+            padding: 10px 15px !important;
         }
-
-        .sg-nav-item.active {
-            border-left-color: transparent !important;
-            border-bottom-color: var(--primary) !important;
+        
+        .sg-nav-item.active { 
+            border-left-color: transparent !important; 
+            border-bottom-color: var(--primary) !important; 
         }
-
+        
         .sg-nav-sep { display: none !important; }
 
-        .sg-body {
-            padding: 20px 15px !important;
-            padding-bottom: 120px !important;
-            overflow-y: visible !important;
-            min-height: auto !important;
+        .sg-body { 
+            flex: 1 !important; 
+            padding: 20px 20px 180px 20px !important; /* 180px de aire para que no se corte el botón */
+            overflow-y: auto !important; 
+            height: auto !important;
+            min-height: 0 !important;
+            -webkit-overflow-scrolling: touch;
         }
-
+        
         .sg-save-btn {
-            position: static !important;
-            margin-top: 20px !important;
-            margin-bottom: 30px !important;
+            margin-bottom: 40px !important; /* Más aire abajo del propio botón */
         }
     }
     </style>
 
     <div style="height: 100vh; height: 100dvh; display: flex; flex-direction: column; position: fixed; inset: 0; width: 100vw; background: var(--bg-base); overflow: hidden;">
+        
         <header class="sg-top-bar animate__animated animate__fadeInDown">
             <button class="sg-back-btn" onclick="navigate('/user/home')" title="Volver al inicio">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
