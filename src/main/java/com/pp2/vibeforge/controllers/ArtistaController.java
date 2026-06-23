@@ -1,10 +1,11 @@
 package com.pp2.vibeforge.controllers;
 
 import com.pp2.vibeforge.models.Artista;
-import com.pp2.vibeforge.repositories.ArtistaRepository;
+import com.pp2.vibeforge.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,8 +16,12 @@ import java.util.Optional;
 @CrossOrigin(origins = "*")
 public class ArtistaController {
 
-    @Autowired
-    private ArtistaRepository artistaRepository;
+    @Autowired private ArtistaRepository artistaRepository;
+    @Autowired private AlbumRepository albumRepository;
+    @Autowired private CancionRepository cancionRepository;
+    @Autowired private FavoritoArtistaRepository favoritoArtistaRepository;
+    @Autowired private FavoritoAlbumRepository favoritoAlbumRepository;
+    @Autowired private HistorialUsuarioRepository historialUsuarioRepository;
 
 
     @GetMapping
@@ -104,10 +109,19 @@ public class ArtistaController {
         System.out.println("--- INICIANDO IMPORTACIÓN DE: " + nombreArtista + " ---");
         
         List<Artista> existentes = artistaRepository.findAll();
-        boolean yaExiste = existentes.stream().anyMatch(a -> a.getNombreArtistico().equalsIgnoreCase(nombreArtista));
-        if (yaExiste) {
-            System.out.println("Cancelado: El artista ya existe en la BD.");
-            return org.springframework.http.ResponseEntity.badRequest().body("El artista ya existe en Vibeforge.");
+        Optional<Artista> artistaOculto = existentes.stream()
+            .filter(a -> a.getNombreArtistico().equalsIgnoreCase(nombreArtista))
+            .findFirst();
+        if (artistaOculto.isPresent()) {
+            Artista a = artistaOculto.get();
+            if (a.getActivo() != null && !a.getActivo()) {
+                a.setActivo(true);
+                artistaRepository.save(a);
+                System.out.println("Artista revivido: " + a.getNombreArtistico());
+                return org.springframework.http.ResponseEntity.ok("El artista estaba oculto en la base de datos y ha sido restaurado con éxito.");
+            } else {
+                return org.springframework.http.ResponseEntity.badRequest().body("El artista ya existe y está activo en Vibeforge.");
+            }
         }
 
         RestTemplate restTemplate = new RestTemplate();
@@ -140,6 +154,7 @@ public class ArtistaController {
             nuevoArtista.setNombre(nombreExtraido);
             nuevoArtista.setContraseña("importado123"); 
             nuevoArtista.setCorreo(nombreExtraido.replaceAll("\\s+","").toLowerCase() + "@deezer.import");
+            nuevoArtista.setActivo(true);
 
             if (datosPrimerArtista.containsKey("picture_xl") && datosPrimerArtista.get("picture_xl") != null) {
                 nuevoArtista.setImagenUrl(datosPrimerArtista.get("picture_xl").toString());
@@ -239,6 +254,7 @@ public class ArtistaController {
         artistaRepository.save(artista);
         return org.springframework.http.ResponseEntity.ok(artista);
     }
+
     @PatchMapping("/{id}/toggle-activo")
     public org.springframework.http.ResponseEntity<?> toggleActivo(@PathVariable Integer id) {
         Artista artista = artistaRepository.findById(id).orElse(null);
@@ -248,14 +264,22 @@ public class ArtistaController {
         artistaRepository.save(artista);
         return org.springframework.http.ResponseEntity.ok(artista.getActivo());
     }
+
     @DeleteMapping("/{id}")
+    @Transactional 
     public org.springframework.http.ResponseEntity<?> borrarArtista(@PathVariable Integer id) {
         Artista artista = artistaRepository.findById(id).orElse(null);
         if (artista == null) return org.springframework.http.ResponseEntity.notFound().build();
 
         try {
+            favoritoArtistaRepository.deleteByIdArtista(id);
+            historialUsuarioRepository.deleteByTipoItemAndIdReferencia("artist", id);
+
             List<com.pp2.vibeforge.models.Album> albumes = albumRepository.findByIdArtista(id);
             for (com.pp2.vibeforge.models.Album album : albumes) {
+                favoritoAlbumRepository.deleteByIdAlbum(album.getIdAlbum());
+                historialUsuarioRepository.deleteByTipoItemAndIdReferencia("album", album.getIdAlbum());
+
                 List<com.pp2.vibeforge.models.Cancion> canciones = cancionRepository.findByIdAlbum(album.getIdAlbum());
                 cancionRepository.deleteAll(canciones);
             }
@@ -264,9 +288,11 @@ public class ArtistaController {
             
             return org.springframework.http.ResponseEntity.ok("Artista y toda su discografía eliminados permanentemente.");
         } catch (Exception e) {
-            return org.springframework.http.ResponseEntity.internalServerError().body("Error al eliminar en cascada: " + e.getMessage());
+            e.printStackTrace();
+            return org.springframework.http.ResponseEntity.internalServerError().body("Error al eliminar en cascada: Asegúrate de que no haya canciones de este artista agregadas a Playlists de usuarios. Error: " + e.getMessage());
         }
     }
+
     @PostMapping("/{id}/cargar-mas-albumes")
     public org.springframework.http.ResponseEntity<?> cargarMasAlbumes(@PathVariable Integer id) {
         Artista artista = artistaRepository.findById(id).orElse(null);
@@ -328,11 +354,4 @@ public class ArtistaController {
             return org.springframework.http.ResponseEntity.internalServerError().body("Fallo: " + e.getMessage());
         }
     }
-    
-    @Autowired
-    private com.pp2.vibeforge.repositories.AlbumRepository albumRepository;
-
-    @Autowired 
-    private com.pp2.vibeforge.repositories.CancionRepository cancionRepository;
-
 }
